@@ -1,6 +1,42 @@
+"use client";
 import Link from "next/link";
+import axios from "axios";
+import { useState, FormEvent } from "react";
+const Signup = () => {
+  const url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/signup`;
+  console.log(url);
+  const signupData = {
+    username: "",
+    fullname: "",
+    email: "",
+    password: "",
+  };
+  const [form, setForm] = useState(signupData);
+  function handleChange(event: any) {
+    const { name, value } = event.target;
+    setForm({ ...form, [name]: value });
+  }
 
-const page = () => {
+  const handleSubmit = async (
+    event: FormEvent<HTMLFormElement>
+  ): Promise<void> => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+
+    await axios
+      .post(url, formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <>
       <section className="bg-gray-50 dark:bg-gray-900">
@@ -9,7 +45,7 @@ const page = () => {
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               Create your new account
             </h1>
-            <form className="space-y-4 md:space-y-6" action="#">
+            <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
               <div>
                 <label
                   htmlFor="username"
@@ -18,29 +54,37 @@ const page = () => {
                   Username
                 </label>
                 <input
-                  type="email"
-                  name="email"
-                  id="email"
+                  type="username"
+                  name="username"
+                  id="username"
                   className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="name@company.com"
+                  placeholder="abc123"
                   required={true}
+                  onChange={(e) => {
+                    handleChange(e);
+                  }}
+                  value={form.username}
                 />
               </div>
 
               <div>
                 <label
-                  htmlFor="email"
+                  htmlFor="Jhon Doe"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
                   Your Name
                 </label>
                 <input
-                  type="name"
-                  name="name"
-                  id="name"
+                  type="fullname"
+                  name="fullname"
+                  id="fullname"
                   className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="name@company.com"
+                  placeholder="fullname"
                   required={true}
+                  onChange={(e) => {
+                    handleChange(e);
+                  }}
+                  value={form.fullname}
                 />
               </div>
 
@@ -58,6 +102,10 @@ const page = () => {
                   className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="name@company.com"
                   required={true}
+                  onChange={(e) => {
+                    handleChange(e);
+                  }}
+                  value={form.email}
                 />
               </div>
 
@@ -75,6 +123,10 @@ const page = () => {
                   placeholder="••••••••"
                   className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required={true}
+                  onChange={(e) => {
+                    handleChange(e);
+                  }}
+                  value={form.password}
                 />
               </div>
               <div className="flex items-center justify-between">
@@ -101,7 +153,7 @@ const page = () => {
                   href="#"
                   className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
                 >
-                  htmlForgot password?
+                  Forgot password?
                 </a>
               </div>
               <button
@@ -127,4 +179,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Signup;

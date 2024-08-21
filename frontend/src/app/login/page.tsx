@@ -1,6 +1,42 @@
-import Link from "next/link";
+"use client";
 
-const page = () => {
+import Link from "next/link";
+import { useState, FormEvent } from "react";
+import axios from "axios";
+
+const Login = (): React.JSX.Element => {
+  const url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/login`;
+  console.log(url);
+  const loginData = {
+    email: "",
+    password: "",
+  };
+  const [form, setForm] = useState(loginData);
+  function handleChange(event: any) {
+    const { name, value } = event.target;
+    setForm({ ...form, [name]: value });
+  }
+
+  const handleSubmit = async (
+    event: FormEvent<HTMLFormElement>
+  ): Promise<void> => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+
+    await axios
+      .post(url, formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <>
       <section className="bg-gray-50 dark:bg-gray-900">
@@ -9,7 +45,7 @@ const page = () => {
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               Sign in to your account
             </h1>
-            <form className="space-y-4 md:space-y-6" action="#">
+            <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
               <div>
                 <label
                   htmlFor="email"
@@ -24,6 +60,10 @@ const page = () => {
                   className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="name@company.com"
                   required={true}
+                  onChange={(e) => {
+                    handleChange(e);
+                  }}
+                  value={form.email}
                 />
               </div>
               <div>
@@ -40,6 +80,10 @@ const page = () => {
                   placeholder="••••••••"
                   className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required={true}
+                  onChange={(e) => {
+                    handleChange(e);
+                  }}
+                  value={form.password}
                 />
               </div>
               <div className="flex items-center justify-between">
@@ -92,4 +136,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Login;

@@ -4,6 +4,10 @@ import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import { Document } from "mongoose";
 
+interface userRequest extends Request {
+  user?: any;
+}
+
 const generateAccessRefreshToken = (
   id: string,
   email: string,
@@ -29,7 +33,7 @@ const generateAccessRefreshToken = (
     },
     secret,
     {
-      expiresIn: process.env.REFRESH_TOKEN_SECRET,
+      expiresIn: process.env.REFRESH_TOKEN_EXPIERY,
     }
   );
 
@@ -108,11 +112,9 @@ export const loginUser = async (req: Request, res: Response) => {
       });
     }
 
-    const secret: string = process.env.ACCESS_TOKEN_SECRET || "secret";
-    const isCorrectPassword = jwt.verify(password, secret);
-
-    if (!isCorrectPassword) {
-      return res.status(406).json({
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) {
+      return res.status(400).json({
         success: false,
         message: `invalid password`,
       });
@@ -126,14 +128,15 @@ export const loginUser = async (req: Request, res: Response) => {
 
     user.refreshToken = refreshToken;
 
-    user.save();
+    await user.save();
 
     const options = {
       httpOnly: true,
       secure: true,
     };
-
-    res
+    console.log(accessToken);
+    console.log(refreshToken);
+    return res
       .cookie("accessToken", accessToken, options)
       .cookie("refreshToken", refreshToken, options)
       .status(200)
@@ -142,6 +145,65 @@ export const loginUser = async (req: Request, res: Response) => {
         message: `user logged in successfully`,
         data: user,
       });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: `server error`,
+    });
+  }
+};
+
+export const logoutUser = async (req: userRequest, res: Response) => {
+  try {
+    const user = req.user;
+
+    const refreshToken: string = "";
+    user.refreshToken = refreshToken;
+
+    console.log("updated user" + user);
+    try {
+      await user.save();
+    } catch (error) {
+      return res.status(405).json({
+        message: error,
+      });
+    }
+
+    const options = {
+      httpOnly: true,
+      secure: true,
+    };
+    res
+      .clearCookie("accessToken", options)
+      .clearCookie("refreshToken", options)
+      .status(200)
+      .json({
+        success: true,
+        message: "user logged out successfully",
+      });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: `server error`,
+    });
+  }
+};
+
+export const getUser = async (req: userRequest, res: Response) => {
+  try {
+    const user = req.user;
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: `user not found`,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: user,
+    });
   } catch (error) {
     return res.status(500).json({
       success: false,
