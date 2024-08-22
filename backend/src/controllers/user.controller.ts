@@ -130,9 +130,13 @@ export const loginUser = async (req: Request, res: Response) => {
 
     await user.save();
 
+    const expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + 15);
+
     const options = {
       httpOnly: true,
       secure: true,
+      expires: expiryDate,
     };
     console.log(accessToken);
     console.log(refreshToken);
