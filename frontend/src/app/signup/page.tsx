@@ -1,41 +1,38 @@
 "use client";
+import { PostRequest } from "@/utils/tanstackApiHandler";
 import Link from "next/link";
-import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useState, FormEvent } from "react";
-const Signup = () => {
+
+const Signup = (): React.JSX.Element => {
+  const Router = useRouter();
   const url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/signup`;
-  console.log(url);
   const signupData = {
     username: "",
     fullname: "",
     email: "",
     password: "",
   };
+
   const [form, setForm] = useState(signupData);
+
   function handleChange(event: any) {
     const { name, value } = event.target;
     setForm({ ...form, [name]: value });
   }
 
+  const { isPending, mutateAsync } = PostRequest(url);
+
   const handleSubmit = async (
     event: FormEvent<HTMLFormElement>
   ): Promise<void> => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-
-    await axios
-      .post(url, formData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    const formData: any = new FormData(event.currentTarget);
+    mutateAsync(formData, {
+      onSuccess: () => {
+        Router.push(`/login`);
+      },
+    });
   };
   return (
     <>
@@ -160,7 +157,7 @@ const Signup = () => {
                 type="submit"
                 className="w-full text-black bg-orange-300 hover:bg-orange-500 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
               >
-                Sign in
+                {isPending ? "loading" : "signup"}
               </button>
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                 If you already have account? {""}

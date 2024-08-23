@@ -2,41 +2,35 @@
 
 import Link from "next/link";
 import { useState, FormEvent } from "react";
-import axios from "axios";
+import { PostRequest } from "@/utils/tanstackApiHandler";
+import { useRouter } from "next/navigation";
 
 const Login = (): React.JSX.Element => {
-  const url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/login`;
-  console.log(url);
+  const Router = useRouter();
   const loginData = {
     email: "",
     password: "",
   };
+
   const [form, setForm] = useState(loginData);
   function handleChange(event: any) {
     const { name, value } = event.target;
     setForm({ ...form, [name]: value });
   }
 
-  const handleSubmit = async (
-    event: FormEvent<HTMLFormElement>
-  ): Promise<void> => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
+  const url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/login`;
+  const { data, mutateAsync } = PostRequest(url);
 
-    await axios
-      .post(url, formData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData: any = new FormData(event.currentTarget);
+    mutateAsync(formData, {
+      onSuccess: () => {
+        Router.push(`/`);
+      },
+    });
   };
+
   return (
     <>
       <section className="bg-gray-50 dark:bg-gray-900">
