@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button } from "./ui/button";
+import LoginButton from "./LoginButton";
 import MobileSidebar from "./MobileSidebar";
 
 const Header = () => {
@@ -8,12 +8,7 @@ const Header = () => {
       <div className="border-b-2 border-b-orange-600 py-6">
         <div className="container items-center mx-auto flex justify-between">
           <Link href={"/"}>BestFood.com</Link>
-
-          <Link href={"/login"}>
-            <Button className="bg-orange-600 hidden md:block">Login</Button>
-          </Link>
-
-          <MobileSidebar />
+          <LoginButton />
         </div>
       </div>
     </>

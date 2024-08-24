@@ -1,17 +1,20 @@
 "use client";
-import { PostRequest } from "@/utils/tanstackApiHandler";
 import { useEffect } from "react";
+import { PostRequest } from "@/utils/tanstackApiHandler";
+
 const HomePage = (): any => {
   const url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/getUser`;
 
-  const { mutate, data } = PostRequest(url);
+  const { mutate, isPending, isSuccess, isError } = PostRequest(url, ["user"]);
 
   useEffect(() => {
     mutate();
-  }, []);
+  }, [mutate]);
   return (
     <>
-      <h1>{data?.data.username}</h1>
+      {isSuccess ? <h1>user is found</h1> : null}
+      {isPending ? <h1>loading...</h1> : null}
+      {isError ? <h1>user is not loggedin</h1> : null}
     </>
   );
 };

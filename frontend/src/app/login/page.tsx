@@ -6,6 +6,7 @@ import { PostRequest } from "@/utils/tanstackApiHandler";
 import { useRouter } from "next/navigation";
 
 const Login = (): React.JSX.Element => {
+  const getUserUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/getUser`;
   const Router = useRouter();
   const loginData = {
     email: "",
@@ -19,7 +20,7 @@ const Login = (): React.JSX.Element => {
   }
 
   const url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/login`;
-  const { data, mutateAsync } = PostRequest(url);
+  const { mutateAsync } = PostRequest(url, ["user"]);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
