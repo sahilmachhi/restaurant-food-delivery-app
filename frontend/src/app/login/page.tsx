@@ -4,9 +4,11 @@ import Link from "next/link";
 import { useState, FormEvent } from "react";
 import { PostRequest } from "@/utils/tanstackApiHandler";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { login, setUser } from "@/store/userSlice";
 
 const Login = (): React.JSX.Element => {
-  const getUserUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/getUser`;
+  const dispatch = useDispatch();
   const Router = useRouter();
   const loginData = {
     email: "",
@@ -20,13 +22,15 @@ const Login = (): React.JSX.Element => {
   }
 
   const url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/login`;
-  const { mutateAsync } = PostRequest(url, ["user"]);
-
+  const { mutateAsync, isPending, data } = PostRequest(url, ["user"]);
+  const userData = data?.data.data;
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData: any = new FormData(event.currentTarget);
     mutateAsync(formData, {
       onSuccess: () => {
+        dispatch(setUser(userData));
+        dispatch(login());
         Router.push(`/`);
       },
     });
@@ -112,7 +116,7 @@ const Login = (): React.JSX.Element => {
                 type="submit"
                 className="w-full text-black bg-orange-300 hover:bg-orange-500 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
               >
-                Sign in
+                {isPending ? `loading` : `login`}
               </button>
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                 Don’t have an account yet?{" "}
