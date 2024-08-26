@@ -1,5 +1,53 @@
 import mongoose from "mongoose";
 
+const addressSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    default: "address1",
+  },
+  address: {
+    name: {
+      type: String,
+      require: true,
+      default: "",
+    },
+    addressLine1: {
+      type: String,
+      require: true,
+      default: "",
+    },
+    addressLine2: {
+      type: String,
+      default: "",
+    },
+    city: {
+      type: String,
+      required: true,
+      default: "",
+    },
+    district: {
+      type: String,
+      require: true,
+      default: "",
+    },
+    state: {
+      type: String,
+      require: true,
+      default: "",
+    },
+    country: {
+      type: String,
+      require: true,
+      default: "",
+    },
+    pincode: {
+      type: Number,
+      require: true,
+      default: 111111,
+    },
+  },
+});
+
 const userSchema = new mongoose.Schema({
   fullname: {
     type: String,
@@ -42,6 +90,7 @@ const userSchema = new mongoose.Schema({
   refreshToken: {
     type: String,
   },
+  deliveryAddresses: [addressSchema],
 });
 
 export const User = mongoose.model("User", userSchema);

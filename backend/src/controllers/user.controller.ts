@@ -215,3 +215,163 @@ export const getUser = async (req: userRequest, res: Response) => {
     });
   }
 };
+
+export const createNewAddress = async (req: userRequest, res: Response) => {
+  try {
+    const user = req.user._id;
+
+    const newAddress = req.body;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      user, // User ID to find
+      { $push: { deliveryAddresses: newAddress } }, // Update operation
+      { new: true, runValidators: true } // Options: return updated document, run validators
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    return res.status(200).json({
+      success: true,
+      message: `address created successfully`,
+      user: updatedUser,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: `server error`,
+    });
+  }
+};
+
+export const updateAddress = async (req: userRequest, res: Response) => {
+  try {
+    const user = req.user._id;
+    const { _id: addressId } = req.body;
+    const updatedAddress = req.body;
+
+    const updatedUser = await User.findOneAndUpdate(
+      {
+        _id: user,
+        "deliveryAddresses._id": addressId,
+      },
+      {
+        $set: {
+          "deliveryAddresses.$": updatedAddress,
+        },
+      },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(400).json({
+        success: false,
+        message: `error update failed`,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: `address update success`,
+      user: updatedUser,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: `server error`,
+    });
+  }
+};
+
+export const deleteAddress = async (req: userRequest, res: Response) => {
+  try {
+    const addressId = req.params.addressId;
+    if (!addressId) {
+      return res.status(404).json({ message: "address id not found" });
+    }
+    const user = req.user._id;
+
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: user },
+      { $pull: { deliveryAddresses: { _id: addressId } } },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res
+        .status(404)
+        .json({ message: "User or address not found in database" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: `address deleted from database`,
+      user: updatedUser,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: `server error`,
+    });
+  }
+};
+
+export const getAddress = (req: userRequest, res: Response) => {
+  try {
+    const user = req.user;
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: `could't find user in database`,
+      });
+    }
+    const userAddress = user.deliveryAddresses;
+
+    if (!userAddress) {
+      return res.status(401).json({
+        success: false,
+        message: `could't find user address`,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: `user address fetched successfuly`,
+      userAddress: userAddress,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: `server error`,
+    });
+  }
+};
+
+export const updateUser = async (req: userRequest, res: Response) => {
+  try {
+    const user = req.user;
+    const { username, fullname } = req.body;
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: `could't find user in database`,
+      });
+    }
+    user.fullname = fullname;
+    user.username = username;
+
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: `user address fetched successfuly`,
+      updatedUser: user,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: `server error`,
+    });
+  }
+};
