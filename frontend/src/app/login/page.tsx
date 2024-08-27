@@ -14,8 +14,10 @@ const Login = (): React.JSX.Element => {
     email: "",
     password: "",
   };
-
+  // state
   const [form, setForm] = useState(loginData);
+
+  // input handler
   function handleChange(event: any) {
     const { name, value } = event.target;
     setForm({ ...form, [name]: value });

@@ -9,6 +9,7 @@ import {
 import Image from "next/image";
 import profile from "../../public/profile.svg";
 import { Button } from "./ui/button";
+import Link from "next/link";
 
 const ProfileDropDown = ({ LogoutHandler }: { LogoutHandler: any }) => {
   const handleLogout = () => {
@@ -27,7 +28,12 @@ const ProfileDropDown = ({ LogoutHandler }: { LogoutHandler: any }) => {
         <DropdownMenuContent>
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Profile</DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link href={`/profile`}>My profile</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link href={`/address`}>My address</Link>
+          </DropdownMenuItem>
           <DropdownMenuItem className="flex items-center justify-center">
             <Button onClick={handleLogout}>Log out</Button>
           </DropdownMenuItem>
