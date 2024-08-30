@@ -1,6 +1,14 @@
 {
   "editor.tabSize": 5,
-  "typescript.suggest.paths": false,
-  "javascript.suggest.paths": false,
-  "path-intellisense.autoTriggerNextSuggestion": true
+  "typescript.suggest.paths": true,
+  "javascript.suggest.paths": true,
+  "path-intellisense.autoTriggerNextSuggestion": true,
+  "editor.fontSize": 14,
+  "editor.fontLigatures": true,
+  "editor.letterSpacing": 0.6,
+  "editor.lineHeight": 1.7,
+  "editor.smoothScrolling": false,
+  "editor.fontVariations": false,
+  "editor.fontFamily": "JetBrains Mono",
+  "editor.codeLensFontSize": 1
 }

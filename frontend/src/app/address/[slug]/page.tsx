@@ -26,7 +26,7 @@ interface Address {
 
 const EditAddress = ({ params }: urlProp) => {
   const addressId: string = params.slug;
-  const [address, setAddress] = useState<Address | null>(null);
+  const [address, setAddress] = useState<Address | any>({});
   const fetchAddress = async () => {
     await axios
       .get("http://localhost:5000/api/user/getAddress", {

@@ -30,8 +30,9 @@ const UserAddress = () => {
         withCredentials: true,
       })
       .then((res) => {
-        const response = res.data;
-        setAddresses(response.userAddress);
+        const response = res.data.userAddress;
+
+        setAddresses(response);
       })
       .catch((error) => console.log(error));
   };
