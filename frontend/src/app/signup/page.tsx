@@ -21,7 +21,7 @@ const Signup = (): React.JSX.Element => {
     setForm({ ...form, [name]: value });
   }
 
-  const { isPending, mutateAsync } = PostRequest(url);
+  const { isPending, mutateAsync } = PostRequest(url, ["signup"]);
 
   const handleSubmit = async (
     event: FormEvent<HTMLFormElement>

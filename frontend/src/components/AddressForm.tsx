@@ -1,61 +1,22 @@
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import { inputVal } from "../utils/constants";
 const AddressForm = ({
   address,
   setAddress,
+  updateAddressData,
 }: {
   address: any;
   setAddress: any;
+  updateAddressData: any;
 }) => {
-  const inputVal = [
-    {
-      name: "name",
-      placeholder: "tag name",
-    },
-    {
-      name: "address.name",
-      placeholder: "name as per address",
-    },
-    {
-      name: "address.addressLine1",
-      placeholder: "address line 1",
-    },
-    {
-      name: "address.addressLine2",
-      placeholder: "address line 2",
-    },
-    {
-      name: "address.city",
-      placeholder: "city",
-    },
-    {
-      name: "address.district",
-      placeholder: "district",
-    },
-    {
-      name: "address.state",
-      placeholder: "state",
-    },
-    {
-      name: "address.state",
-      placeholder: "state",
-    },
-    {
-      name: "address.country",
-      placeholder: "country",
-    },
-    {
-      name: "address.country",
-      placeholder: "country",
-    },
-    {
-      name: "address.pincode",
-      placeholder: "pincode",
-    },
-  ];
-  console.log(address);
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    updateAddressData();
+  };
   const handleChange = (e: any) => {
     const { value, name } = e.target;
+    console.log(address);
 
     if (name.includes(".")) {
       const [parentKey, childKey] = name.split(".");
@@ -74,7 +35,7 @@ const AddressForm = ({
     <>
       <div className="w-full">
         <div>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-8 justify-center items-center">
               {inputVal.map((val, index) => (
                 <div
