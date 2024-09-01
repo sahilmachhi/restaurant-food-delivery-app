@@ -1,7 +1,6 @@
 import { Router } from "express";
 import {
   createUser,
-  getUser,
   loginUser,
   logoutUser,
   createNewAddress,
@@ -9,6 +8,7 @@ import {
   deleteAddress,
   getAddress,
   updateUser,
+  getUser,
 } from "../controllers/user.controller";
 import { verifyJWT } from "../middleware/UserInstance.middleware";
 
