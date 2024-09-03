@@ -14,13 +14,12 @@ import { login, logout, rmUser, setUser } from "@/store/userSlice";
 const LoginButton = () => {
   const getUserUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/getUser`;
   const LogoutUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/logout`;
-  const [isPending, setIsPending] = useState(false);
+  const [isPending, setIsPending] = useState(true);
   const isAuth = useSelector((state: RootState) => state.user.isLoggedIn);
   const user = useSelector((state: RootState) => state.user.user);
   const dispatch = useDispatch();
   useEffect(() => {
     const PostReq = async () => {
-      setIsPending(true);
       try {
         const response = await axios.post(
           getUserUrl,
@@ -69,22 +68,19 @@ const LoginButton = () => {
         <>
           <h1>loading</h1>
         </>
-      ) : null}
-
-      {!isAuth ? (
+      ) : !isAuth ? (
         <>
           <Link href={"/login"}>
             <Button className="bg-orange-600 hidden md:block">Login</Button>
           </Link>
         </>
-      ) : null}
-      {isAuth ? (
+      ) : (
         <>
           <div className="hidden md:block">
             <ProfileDropDown LogoutHandler={LogoutHandler} />
           </div>
         </>
-      ) : null}
+      )}
       <MobileSidebar user={user} LogoutHandler={LogoutHandler} />
     </>
   );
