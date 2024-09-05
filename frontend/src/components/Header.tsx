@@ -7,7 +7,7 @@ const Header = () => {
     <>
       <div className="border-b-2 border-b-orange-600 py-6">
         <div className="container items-center mx-auto flex justify-between">
-          <Link href={"/"}>BestFood.com</Link>
+          <Link href={"/"}>BestFood</Link>
           <LoginButton />
         </div>
       </div>
