@@ -9,14 +9,14 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useDispatch } from "react-redux";
 import axios from "axios";
-import { login, logout, rmUser, setUser } from "@/store/userSlice";
+import { login, logout, rmUser, setUser, loadingDone } from "@/store/userSlice";
 
 const LoginButton = () => {
   const getUserUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/getUser`;
   const LogoutUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/logout`;
-  const [isPending, setIsPending] = useState(true);
   const isAuth = useSelector((state: RootState) => state.user.isLoggedIn);
   const user = useSelector((state: RootState) => state.user.user);
+  const isPending = useSelector((state: RootState) => state.user.isLoading);
   const dispatch = useDispatch();
   useEffect(() => {
     const PostReq = async () => {
@@ -33,11 +33,11 @@ const LoginButton = () => {
         );
         const user = response.data.data;
         dispatch(login());
+        dispatch(loadingDone());
         dispatch(setUser(user));
-        setIsPending(false);
       } catch (error) {
         dispatch(logout());
-        setIsPending(false);
+        dispatch(loadingDone());
       }
     };
     PostReq();

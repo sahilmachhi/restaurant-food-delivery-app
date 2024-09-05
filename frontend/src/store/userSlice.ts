@@ -3,11 +3,13 @@ import { createSlice } from "@reduxjs/toolkit";
 export interface user {
   isLoggedIn: boolean;
   user: { username: string } | null;
+  isLoading: boolean;
 }
 
 const initialState: user = {
   isLoggedIn: false,
   user: null,
+  isLoading: true
 };
 
 export const userSlice = createSlice({
@@ -26,9 +28,15 @@ export const userSlice = createSlice({
     rmUser: (state) => {
       state.user = null;
     },
+    loadingDone:(state) => {
+      state.isLoading = false
+    },
+    lodingStart: (state) => {
+      state.isLoading = true
+    }
   },
 });
 
-export const { login, logout, rmUser, setUser } = userSlice.actions;
+export const { login, logout, rmUser, setUser, loadingDone, lodingStart } = userSlice.actions;
 
 export default userSlice.reducer;
