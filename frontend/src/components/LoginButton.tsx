@@ -32,12 +32,12 @@ const LoginButton = () => {
           }
         );
         const user = response.data.data;
-        dispatch(login());
         dispatch(loadingDone());
+        dispatch(login());
         dispatch(setUser(user));
       } catch (error) {
-        dispatch(logout());
         dispatch(loadingDone());
+        dispatch(logout());
       }
     };
     PostReq();
