@@ -4,6 +4,7 @@ import "dotenv/config";
 import { connectDB } from "./db";
 import { userRoutes } from "./Routes/user.routes";
 import cookieParser from "cookie-parser";
+import { restaurantRoutes } from "./Routes/restaurant.routes";
 
 const options = {
   httpOnly: true,
@@ -35,6 +36,7 @@ app.get("/", async (req: Request, res: Response) => {
 });
 
 app.use("/api/user", userRoutes);
+app.use("/api/restaurant", restaurantRoutes);
 
 app.listen(5000, () => {
   console.log("app is running on port 5000");
