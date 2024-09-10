@@ -9,6 +9,7 @@ const restaurantSchema = new mongoose.Schema(
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      require: true,
     },
     city: {
       type: String,
@@ -30,7 +31,7 @@ const restaurantSchema = new mongoose.Schema(
     },
     imageUrl: {
       type: String,
-      require: true,
+      // require: true,
     },
     menus: [
       {

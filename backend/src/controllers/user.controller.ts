@@ -4,7 +4,7 @@ import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import { Document } from "mongoose";
 
-interface userRequest extends Request {
+export interface userRequest extends Request {
   user?: any;
 }
 
