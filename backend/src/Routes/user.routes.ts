@@ -32,4 +32,4 @@ userRoutes.delete("/deleteAddress/:addressId", verifyJWT, deleteAddress);
 
 userRoutes.get("/getAddress", verifyJWT, getAddress);
 
-userRoutes.put("/updateUser", updateUser);
+userRoutes.put("/updateUser", verifyJWT, updateUser);

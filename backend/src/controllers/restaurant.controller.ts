@@ -2,6 +2,7 @@ import { Response } from "express";
 import { Restaurant } from "../models/restaurant.model";
 import { userRequest } from "./user.controller";
 import mongoose from "mongoose";
+import { Order } from "../models/order.model";
 
 export const createRestaurent = async (req: userRequest, res: Response) => {
   try {
@@ -90,6 +91,46 @@ export const updateRestaurant = async (req: userRequest, res: Response) => {
       success: true,
       message: "restaurant updated",
       restaurant,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "server error",
+    });
+  }
+};
+
+export const getRestaurantOrder = async (req: userRequest, res: Response) => {
+  try {
+    const user = req.user._id;
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "user is not logged in",
+      });
+    }
+    const restaurant = await Restaurant.findOne({ owner: user });
+
+    if (!restaurant) {
+      return res.status(402).json({
+        success: false,
+        message: "user has not created restaurant",
+      });
+    }
+
+    const Orders = await Order.find({ restaurant: restaurant._id });
+
+    if (!Orders) {
+      return res.status(402).json({
+        success: false,
+        message: "no orders on this restaurant",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      Orders,
     });
   } catch (error) {
     return res.status(500).json({
