@@ -205,9 +205,41 @@ export const searchRestaurant = async (req: any, res: Response) => {
 
     const restuarants = await Restaurant.find(Query);
 
+    if (!Restaurant) {
+      return res.status(401).json({
+        success: false,
+        message: "no restaurant found with this filter",
+      });
+    }
+
     return res.status(200).json({
       success: true,
       restuarants,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "server error",
+    });
+  }
+};
+
+export const getSingleRestaurant = async (req: any, res: Response) => {
+  try {
+    const restaurantId = req.parmas.id;
+
+    const restaurant = await Restaurant.findById(restaurantId);
+
+    if (!restaurant) {
+      return res.status(401).json({
+        success: false,
+        message: "server error",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      restaurant,
     });
   } catch (error) {
     return res.status(500).json({
