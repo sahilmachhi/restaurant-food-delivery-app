@@ -2,7 +2,6 @@ import { Response } from "express";
 import { Menu } from "../models/menu.model";
 import { Restaurant } from "../models/restaurant.model";
 import { userRequest } from "./user.controller";
-import mongoose from "mongoose";
 
 export const addMenu = async (req: userRequest, res: Response) => {
   try {

@@ -24,7 +24,8 @@
     "react-dom": "^18",
     "react-redux": "^9.1.2",
     "tailwind-merge": "^2.5.2",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@tanstack/react-query-devtools": "^5.52.1",

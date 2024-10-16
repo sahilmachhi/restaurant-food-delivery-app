@@ -64,8 +64,12 @@ export const getOwnerRestaurant = async (req: userRequest, res: Response) => {
 export const updateRestaurant = async (req: userRequest, res: Response) => {
   try {
     const user = req.user._id;
+    const restaurantId = req.params;
     const { restaurantName, city, country, cuisines, deliveryTime } = req.body;
-    const restaurant = await Restaurant.findOne({ user: user });
+    const restaurant = await Restaurant.findOne({
+      _id: restaurantId,
+      owner: user,
+    });
 
     if (!restaurant) {
       return res.status(409).json({

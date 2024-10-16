@@ -32,6 +32,9 @@ const ProfileDropDown = ({ LogoutHandler }: { LogoutHandler: any }) => {
             <Link href={`/profile`}>My profile</Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
+            <Link href={`/myRestaurant`}>My Restaurant</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
             <Link href={`/address`}>My address</Link>
           </DropdownMenuItem>
           <DropdownMenuItem className="flex items-center justify-center">
