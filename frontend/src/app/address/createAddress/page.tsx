@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Address, newAddressVal } from "../../../utils/constants";
-import AddressForm from "@/components/AddressForm";
+import AddressForms from "@/components/AddressForms";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
@@ -27,7 +27,7 @@ const CreateAddress = () => {
 
   return (
     <>
-      <AddressForm
+      <AddressForms
         address={address}
         setAddress={setAddress}
         updateAddressData={updateAddressData}
