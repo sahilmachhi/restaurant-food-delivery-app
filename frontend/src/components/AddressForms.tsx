@@ -6,15 +6,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 
 const AddressForms = ({
-  // setAddress,
   address,
   updateAddressData,
-  fetchAddress,
 }: {
-  // setAddress: any;
-  address: any;
+  address?: any;
   updateAddressData: any;
-  fetchAddress: any;
 }) => {
   console.log(address?.name);
   const schema = z.object({
@@ -42,18 +38,22 @@ const AddressForms = ({
   });
 
   useEffect(() => {
-    // if (address) {
-    const fetchdata = async () => {
-      const address = await fetchAddress();
-      console.log(address);
+    if (address) {
       reset({
-        name: address?.name,
+        name: address.name || "",
+        address: {
+          name: address.address?.name || "",
+          addressLine1: address.address?.addressLine1 || "",
+          addressLine2: address.address?.addressLine2 || "",
+          city: address.address?.city || "",
+          district: address.address?.district || "",
+          state: address.address?.state || "",
+          country: address.address?.country || "",
+          pincode: address.address?.pincode || "",
+        },
       });
-    };
-
-    fetchdata();
-    // }
-  }, []);
+    }
+  }, [address, reset]); // Reset when address data changes
 
   const onSubmit = (data: any) => {
     updateAddressData(data);

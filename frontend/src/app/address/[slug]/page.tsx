@@ -14,7 +14,7 @@ interface urlProp {
 const EditAddress = ({ params }: urlProp) => {
   const Router = useRouter();
   const addressId: string = params.slug;
-  const [address, setAddress] = useState<Address | any>();
+  const [address, setAddress] = useState<Address | any>({});
 
   const updateAddressData = async (address: any) => {
     // console.log(address);
@@ -43,27 +43,20 @@ const EditAddress = ({ params }: urlProp) => {
       })
       .then((res) => {
         const response = res.data.userAddress;
-        console.log(response);
         const address = response.find(
           (address: any) => address._id === addressId
         );
         setAddress(address);
-        return address;
       })
       .catch((error) => console.log(error));
-    return address;
   };
 
-  // useEffect(() => {
-  //   fetchAddress();
-  // }, []);
+  useEffect(() => {
+    fetchAddress();
+  }, []);
   return (
     <>
-      <AddressForms
-        address={address}
-        updateAddressData={updateAddressData}
-        fetchAddress={fetchAddress}
-      />
+      <AddressForms address={address} updateAddressData={updateAddressData} />
     </>
   );
 };
