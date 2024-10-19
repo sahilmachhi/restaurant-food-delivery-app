@@ -7,9 +7,9 @@ import { useRouter } from "next/navigation";
 
 const CreateAddress = () => {
   const Router = useRouter();
-  const [address, setAddress] = useState<Address | any>(newAddressVal);
+  const [address, setAddress] = useState<Address | any>({});
 
-  const updateAddressData = async () => {
+  const updateAddressData = async (address: any) => {
     await axios
       .post("http://localhost:5000/api/user/createAddress", address, {
         headers: {
@@ -27,11 +27,7 @@ const CreateAddress = () => {
 
   return (
     <>
-      <AddressForms
-        address={address}
-        setAddress={setAddress}
-        updateAddressData={updateAddressData}
-      />
+      <AddressForms address={address} updateAddressData={updateAddressData} />
     </>
   );
 };
