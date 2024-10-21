@@ -1,7 +1,9 @@
+import RestaurantForm from "@/components/RestaurantForm";
+
 const page = () => {
   return (
     <>
-      <h1>one restaurant</h1>
+      <RestaurantForm />
     </>
   );
 };
