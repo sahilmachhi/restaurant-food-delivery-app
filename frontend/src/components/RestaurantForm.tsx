@@ -52,7 +52,9 @@ const RestaurantForm = () => {
     resolver: zodResolver(formSchema),
   });
 
-  const onSubmit = (form: input) => {};
+  const onSubmit = (form: input) => {
+    console.log(form);
+  };
   return (
     <>
       <div className="w-full">
@@ -97,7 +99,6 @@ const RestaurantForm = () => {
                   <Checkbox />
                   <label htmlFor="">cuisines</label>
                 </div>
-
                 <div className="flex items-center justify-center gap-2">
                   <Checkbox />
                   <label htmlFor="">cuisines</label>

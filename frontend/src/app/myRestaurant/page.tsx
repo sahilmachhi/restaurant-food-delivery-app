@@ -1,7 +1,7 @@
 const page = () => {
   return (
     <>
-      <h1>my restuanrat list</h1>
+      <h1>my restaurant list</h1>
     </>
   );
 };
