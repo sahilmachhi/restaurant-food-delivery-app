@@ -245,6 +245,7 @@ export const createNewAddress = async (req: userRequest, res: Response) => {
 };
 
 export const updateAddress = async (req: userRequest, res: Response) => {
+  debugger;
   try {
     const user = req.user._id;
     const { _id: addressId } = req.body;

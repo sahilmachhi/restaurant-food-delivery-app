@@ -17,9 +17,10 @@ const EditAddress = ({ params }: urlProp) => {
   const [address, setAddress] = useState<Address | any>({});
 
   const updateAddressData = async (address: any) => {
-    // console.log(address);
+    const UpdatedAddress = { ...address, _id: addressId };
+    console.log(UpdatedAddress);
     await axios
-      .put("http://localhost:5000/api/user/updateAddress", address, {
+      .put("http://localhost:5000/api/user/updateAddress", UpdatedAddress, {
         headers: {
           "Content-Type": "application/json",
         },

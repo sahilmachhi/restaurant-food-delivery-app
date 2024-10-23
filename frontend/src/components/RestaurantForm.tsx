@@ -3,46 +3,47 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Input } from "./ui/input";
-import { Checkbox } from "./ui/checkbox";
-
-const formSchema = z.object({
-  restaurantName: z.string({
-    required_error: "restaurant name is required",
-  }),
-  city: z.string({
-    required_error: "city is required",
-  }),
-  country: z.string({
-    required_error: "country is required",
-  }),
-  deliveryTime: z.coerce.number({
-    required_error: "estimated delivery time is required",
-    invalid_type_error: "must be valid number",
-  }),
-  cuisines: z.array(z.string()).nonempty({
-    message: "please select at least one item",
-  }),
-  imageUrl: z.instanceof(File, {
-    message: "image of restaurant is required",
-  }),
-  menus: z.array(
-    z.object({
-      name: z.string().min(1, "name is required"),
-      description: z.string().min(1, "name is required"),
-      price: z.coerce.number({
-        required_error: "product price is required",
-        invalid_type_error: "price must be in number",
-      }),
-      imageUrl: z.instanceof(File, {
-        message: "image of menu item is required",
-      }),
-    })
-  ),
-});
-
-type input = z.infer<typeof formSchema>;
+import CuisinesForm from "./CuisinesForm";
+import { Button } from "./ui/button";
 
 const RestaurantForm = () => {
+  const formSchema = z.object({
+    restaurantName: z.string({
+      required_error: "restaurant name is required",
+    }),
+    city: z.string({
+      required_error: "city is required",
+    }),
+    country: z.string({
+      required_error: "country is required",
+    }),
+    deliveryTime: z.coerce.number({
+      required_error: "estimated delivery time is required",
+      invalid_type_error: "must be valid number",
+    }),
+    cuisines: z.array(z.string()).nonempty({
+      message: "please select at least one item",
+    }),
+    // imageUrl: z.instanceof(File, {
+    //   message: "image of restaurant is required",
+    // }),
+    // menus: z.array(
+    //   z.object({
+    //     name: z.string().min(1, "name is required"),
+    //     description: z.string().min(1, "name is required"),
+    //     price: z.coerce.number({
+    //       required_error: "product price is required",
+    //       invalid_type_error: "price must be in number",
+    //     }),
+    //     imageUrl: z.instanceof(File, {
+    //       message: "image of menu item is required",
+    //     }),
+    //   })
+    // ),
+  });
+
+  type input = z.infer<typeof formSchema>;
+
   const {
     register,
     handleSubmit,
@@ -53,6 +54,7 @@ const RestaurantForm = () => {
   });
 
   const onSubmit = (form: input) => {
+    console.log("on submit is called");
     console.log(form);
   };
   return (
@@ -72,10 +74,7 @@ const RestaurantForm = () => {
             </div>
             <div className="flex flex-col gap-2 items-baseline justify-center w-[680px]">
               <label>City</label>
-              <Input
-                placeholder="Enter city name here"
-                {...register("restaurantName")}
-              />
+              <Input placeholder="Enter city name here" {...register("city")} />
             </div>
             <div className="flex flex-col gap-2 items-baseline justify-center w-[680px]">
               <label>country</label>
@@ -92,37 +91,24 @@ const RestaurantForm = () => {
               />
             </div>
             <div className="flex flex-col gap-2 items-baseline justify-center w-[680px]">
-              <label>Please select cuisines</label>
-              {/* cuisines selection box goes here */}
-              <div className="grid grid-cols-4 gap-4">
-                <div className="flex items-center justify-center gap-2">
-                  <Checkbox />
-                  <label htmlFor="">cuisines</label>
-                </div>
-                <div className="flex items-center justify-center gap-2">
-                  <Checkbox />
-                  <label htmlFor="">cuisines</label>
-                </div>
-                <div className="flex items-center justify-center gap-2">
-                  <Checkbox />
-                  <label htmlFor="">cuisines</label>
-                </div>
-
-                <div className="flex items-center justify-center gap-2">
-                  <Checkbox />
-                  <label htmlFor="">cuisines</label>
-                </div>
-
-                <div className="flex items-center justify-center gap-2">
-                  <Checkbox />
-                  <label htmlFor="">cuisines</label>
-                </div>
-              </div>
+              <CuisinesForm register={register} />
             </div>
-            <div className="flex flex-col gap-2 items-baseline justify-center w-[680px]">
+            {/* <div className="flex flex-col gap-2 items-baseline justify-center w-[680px]">
               <label>Restaurant Image</label>
               <Input {...register("imageUrl")} type="file" />
-            </div>
+            </div> */}
+            {/* {errors ? (
+              <div>
+                <h1>{errors?.restaurantName}</h1>
+                <h1>{errors.city}</h1>
+                <h1>{errors.country}</h1>
+                <h1>{errors.cuisines}</h1>
+
+                <h1>{errors.deliveryTime}</h1>
+                <h1>{errors.imageUrl}</h1>
+              </div>
+            ) : null} */}
+            <Button type="submit">submit</Button>
           </form>
         </div>
       </div>

@@ -15,6 +15,7 @@ const AddressForms = ({
   console.log(address?.name);
   const schema = z.object({
     name: z.string().min(1, { message: "please enter name" }),
+
     address: z.object({
       name: z.string(),
       addressLine1: z.string(),
@@ -41,6 +42,7 @@ const AddressForms = ({
     if (address) {
       reset({
         name: address.name || "",
+
         address: {
           name: address.address?.name || "",
           addressLine1: address.address?.addressLine1 || "",
