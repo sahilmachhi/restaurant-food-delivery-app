@@ -1,17 +1,18 @@
 "use client";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, use } from "react";
 import { Address } from "../../../utils/constants";
 import { useRouter } from "next/navigation";
 import AddressForms from "@/components/AddressForms";
 
 interface urlProp {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
-const EditAddress = ({ params }: urlProp) => {
+const EditAddress = (props: urlProp) => {
+  const params = use(props.params);
   const Router = useRouter();
   const addressId: string = params.slug;
   const [address, setAddress] = useState<Address | any>({});

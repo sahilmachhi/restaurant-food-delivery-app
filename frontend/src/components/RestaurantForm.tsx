@@ -1,10 +1,11 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { any, z } from "zod";
 import { Input } from "./ui/input";
 import CuisinesForm from "./CuisinesForm";
 import { Button } from "./ui/button";
+import { Checkbox } from "./ui/checkbox";
 
 const RestaurantForm = () => {
   const formSchema = z.object({
@@ -21,9 +22,10 @@ const RestaurantForm = () => {
       required_error: "estimated delivery time is required",
       invalid_type_error: "must be valid number",
     }),
-    cuisines: z.array(z.string()).nonempty({
-      message: "please select at least one item",
-    }),
+    cusine: any(),
+    // cuisines: z.array(z.string()).nonempty({
+    //   message: "please select at least one item",
+    // }),
     // imageUrl: z.instanceof(File, {
     //   message: "image of restaurant is required",
     // }),
@@ -48,6 +50,7 @@ const RestaurantForm = () => {
     register,
     handleSubmit,
     reset,
+
     formState: { errors },
   } = useForm<input>({
     resolver: zodResolver(formSchema),
@@ -90,6 +93,16 @@ const RestaurantForm = () => {
                 {...register("deliveryTime")}
               />
             </div>
+            {/* <div className="flex flex-col gap-2 items-baseline justify-center w-[680px]"> */}
+            {/* <Checkbox {...register("cusine")} /> */}
+            {/* <input
+                type="checkbox"
+                id="cusine"
+                {...register("cusine")}
+                onChange={(e) => console.log(e)}
+              />
+              <label htmlFor="cusine">cuisine</label> */}
+            {/* </div> */}
             <div className="flex flex-col gap-2 items-baseline justify-center w-[680px]">
               <CuisinesForm register={register} />
             </div>

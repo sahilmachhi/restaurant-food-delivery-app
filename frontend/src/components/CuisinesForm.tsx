@@ -4,12 +4,18 @@ const CuisinesForm = ({ register }: { register: any }) => {
   return (
     <>
       <div className="flex flex-col gap-2 items-baseline justify-center w-[680px]">
-        <label>Please select cuisines</label>
+        <label>Please select</label>
         {/* cuisines selection box goes here */}
         {cuisineList.map((cuisine, index) => (
           <div className="flex items-center justify-center gap-2" key={index}>
-            <Checkbox value={cuisine} {...register("cuisines")} />
-            <label htmlFor="">{cuisine}</label>
+            <input
+              type="checkbox"
+              id={cuisine}
+              value={cuisine}
+              {...register("cusine")}
+              onChange={(e) => console.log(e.target.value)}
+            />
+            <label htmlFor={cuisine}>{cuisine}</label>
           </div>
         ))}
       </div>

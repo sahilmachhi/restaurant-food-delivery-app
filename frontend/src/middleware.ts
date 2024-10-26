@@ -5,7 +5,7 @@ import axios from "axios";
 
 export async function middleware(request: NextRequest) {
   console.log("middlware running");
-  const cookieStore: any = cookies();
+  const cookieStore: any = await cookies();
   const accessToken = cookieStore.get("accessToken");
   try {
     const response = await axios.post(
