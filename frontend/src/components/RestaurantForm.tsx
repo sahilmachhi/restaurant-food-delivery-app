@@ -22,13 +22,10 @@ const RestaurantForm = () => {
       required_error: "estimated delivery time is required",
       invalid_type_error: "must be valid number",
     }),
-    cusine: any(),
-    // cuisines: z.array(z.string()).nonempty({
-    //   message: "please select at least one item",
-    // }),
-    // imageUrl: z.instanceof(File, {
-    //   message: "image of restaurant is required",
-    // }),
+    cuisines: z.array(z.string()).nonempty({
+      message: "please select at least one item",
+    }),
+    imageUrl: z.any(),
     // menus: z.array(
     //   z.object({
     //     name: z.string().min(1, "name is required"),
@@ -93,35 +90,15 @@ const RestaurantForm = () => {
                 {...register("deliveryTime")}
               />
             </div>
-            {/* <div className="flex flex-col gap-2 items-baseline justify-center w-[680px]"> */}
-            {/* <Checkbox {...register("cusine")} /> */}
-            {/* <input
-                type="checkbox"
-                id="cusine"
-                {...register("cusine")}
-                onChange={(e) => console.log(e)}
-              />
-              <label htmlFor="cusine">cuisine</label> */}
-            {/* </div> */}
+
             <div className="flex flex-col gap-2 items-baseline justify-center w-[680px]">
               <CuisinesForm register={register} />
             </div>
-            {/* <div className="flex flex-col gap-2 items-baseline justify-center w-[680px]">
+            <div className="flex flex-col gap-2 items-baseline justify-center w-[680px]">
               <label>Restaurant Image</label>
               <Input {...register("imageUrl")} type="file" />
-            </div> */}
-            {/* {errors ? (
-              <div>
-                <h1>{errors?.restaurantName}</h1>
-                <h1>{errors.city}</h1>
-                <h1>{errors.country}</h1>
-                <h1>{errors.cuisines}</h1>
-
-                <h1>{errors.deliveryTime}</h1>
-                <h1>{errors.imageUrl}</h1>
-              </div>
-            ) : null} */}
-            <Button type="submit">submit</Button>
+            </div>
+            <Button type="submit">Submit</Button>
           </form>
         </div>
       </div>

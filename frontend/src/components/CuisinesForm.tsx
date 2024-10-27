@@ -12,8 +12,7 @@ const CuisinesForm = ({ register }: { register: any }) => {
               type="checkbox"
               id={cuisine}
               value={cuisine}
-              {...register("cusine")}
-              onChange={(e) => console.log(e.target.value)}
+              {...register("cuisines")}
             />
             <label htmlFor={cuisine}>{cuisine}</label>
           </div>
