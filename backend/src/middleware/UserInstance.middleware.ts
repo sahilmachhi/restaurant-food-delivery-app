@@ -12,6 +12,7 @@ export const verifyJWT = async (
   next: NextFunction
 ) => {
   try {
+    debugger;
     const token = req.cookies.accessToken;
 
     if (!token) {

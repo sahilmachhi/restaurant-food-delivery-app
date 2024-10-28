@@ -3,6 +3,7 @@ import { Restaurant } from "../models/restaurant.model";
 import { userRequest } from "./user.controller";
 import mongoose from "mongoose";
 import { Order } from "../models/order.model";
+import { uploadImage } from "../middleware/Cloudinary.middleware";
 
 export const createRestaurent = async (req: userRequest, res: Response) => {
   try {
@@ -10,6 +11,8 @@ export const createRestaurent = async (req: userRequest, res: Response) => {
     //   req.body;
     const user = req.user._id;
     const existingRestaurant: any = await Restaurant.findOne({ owner: user });
+    const file = req.file;
+
     if (existingRestaurant) {
       return res.status(409).json({
         success: false,
@@ -18,9 +21,18 @@ export const createRestaurent = async (req: userRequest, res: Response) => {
     }
 
     // restaurant image code goes here
+    if (!file) {
+      return res.status(409).json({
+        success: false,
+        message: "please upload Restuarant Image",
+      });
+    }
+
+    const imageUrl = await uploadImage(file);
 
     const restaurant = new Restaurant(req.body);
-    // restaurant.imageUrl = uploadResponse.url
+
+    restaurant.imageUrl = imageUrl;
     restaurant.owner = new mongoose.Types.ObjectId(user);
     await restaurant.save();
 
