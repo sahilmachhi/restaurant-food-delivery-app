@@ -27,13 +27,13 @@ export const createRestaurent = async (req: userRequest, res: Response) => {
         message: "please upload Restuarant Image",
       });
     }
-
-    const imageUrl = await uploadImage(file);
-
     const restaurant = new Restaurant(req.body);
 
+    const imageUrl = await uploadImage(file);
     restaurant.imageUrl = imageUrl;
+
     restaurant.owner = new mongoose.Types.ObjectId(user);
+
     await restaurant.save();
 
     return res.status(200).json({
@@ -77,6 +77,7 @@ export const updateRestaurant = async (req: userRequest, res: Response) => {
   try {
     const user = req.user._id;
     const restaurantId = req.params;
+    const file = req.file;
     const { restaurantName, city, country, cuisines, deliveryTime } = req.body;
     const restaurant = await Restaurant.findOne({
       _id: restaurantId,
@@ -97,9 +98,10 @@ export const updateRestaurant = async (req: userRequest, res: Response) => {
     restaurant.cuisines = cuisines;
 
     // image handling from here
-    // if(file) {
-
-    // }
+    if (file) {
+      const imageUrl = await uploadImage(file);
+      restaurant.imageUrl = imageUrl;
+    }
 
     await restaurant.save();
 

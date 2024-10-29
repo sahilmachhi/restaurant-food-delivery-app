@@ -12,7 +12,7 @@ export const restaurantRoutes = Router();
 // restaurantRoutes.get("/getRes", getRestaurant);
 
 restaurantRoutes.post(
-  "/createRestaurent",
+  "/create_restaurant",
   verifyJWT,
   upload.single("imageFile"),
   createRestaurent

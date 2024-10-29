@@ -1,16 +1,20 @@
 import { v2 as cloudinary } from "cloudinary";
 
 cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
+  cloud_name: "dx44ae7xd",
+  api_key: "153441149783215",
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export const uploadImage = async (image: any) => {
+export const uploadImage = async (file: any) => {
   try {
-    const file = await cloudinary.uploader.upload(image);
-    console.log(file);
-    return file.url;
+    const image = file;
+    const base64Image = Buffer.from(image.buffer).toString("base64");
+    const dataURI = `data:${image.mimetype};base64,${base64Image}`;
+
+    const uploadedFile = await cloudinary.uploader.upload(dataURI);
+    console.log(uploadedFile);
+    return uploadedFile.url;
   } catch (error) {
     console.log(error);
   }
