@@ -63,6 +63,13 @@ export const editMenu = async (req: any, res: Response) => {
     const { name, description, price } = req.body;
     const file = req.file;
 
+    if (price == !Number) {
+      return res.status(401).json({
+        success: false,
+        message: "please enter valid numbers in price",
+      });
+    }
+
     const menu = await Menu.findById(id);
     if (!menu) {
       return res.status(401).json({
@@ -71,13 +78,17 @@ export const editMenu = async (req: any, res: Response) => {
       });
     }
 
-    if (menu) menu.name = name;
-    if (description) menu.description = description;
-    if (price) menu.price = price;
+    console.log(menu);
+
+    menu.name = name;
+    menu.description = description;
+    menu.price = price;
     if (file) {
       const imageUrl = await uploadImage(file);
       menu.imageUrl = imageUrl;
     }
+
+    console.log(menu);
 
     await menu.save();
 

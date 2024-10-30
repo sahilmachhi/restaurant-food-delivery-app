@@ -52,7 +52,7 @@ export const getOwnerRestaurant = async (req: userRequest, res: Response) => {
   try {
     const user = req.user._id;
 
-    const restaurant = await Restaurant.find({ user: user });
+    const restaurant = await Restaurant.find({ owner: user });
 
     if (!restaurant) {
       return res.status(409).json({
@@ -115,6 +115,27 @@ export const updateRestaurant = async (req: userRequest, res: Response) => {
       success: false,
       message: "server error",
     });
+  }
+};
+
+export const deleteRestaurant = async (req: any, res: Response) => {
+  try {
+    const restaurantId = req.params.id;
+
+    // Find the restaurant by ID and delete it
+    const deletedRestaurant = await Restaurant.findByIdAndDelete(restaurantId);
+
+    if (!deletedRestaurant) {
+      return res.status(404).json({ message: "Restaurant not found" });
+    }
+
+    res.status(200).json({
+      message: "Restaurant deleted successfully",
+      data: deletedRestaurant,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -189,10 +210,10 @@ export const updateRestaurantOrder = async (req: any, res: Response) => {
 
 export const searchRestaurant = async (req: any, res: Response) => {
   try {
-    const searchText: string = req.params.searchText || "";
-    const searchQuery: string = req.params.searchQuery || "";
+    const searchText: string = req.params.search_text || "";
+    const searchQuery: string = req.query.search_query || "";
     // this code should be reviewed
-    const selectedCuisines = ((req.params.selectedCuisines as string) || "")
+    const selectedCuisines = ((req.query.selected_cuisines as string) || "")
       .split(",")
       .filter((cuisine) => cuisine);
 
