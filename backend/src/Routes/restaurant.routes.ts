@@ -25,7 +25,11 @@ restaurantRoutes.post(
   createRestaurent
 );
 
-restaurantRoutes.put("/update_restaurant", verifyJWT, updateRestaurant);
+restaurantRoutes.put(
+  "/update_restaurant/:restaurantId",
+  verifyJWT,
+  updateRestaurant
+);
 
 restaurantRoutes.delete("/delete_restaurant/:id", verifyJWT, deleteRestaurant);
 

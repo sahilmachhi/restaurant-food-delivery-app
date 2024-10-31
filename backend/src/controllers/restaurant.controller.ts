@@ -4,6 +4,7 @@ import { userRequest } from "./user.controller";
 import mongoose from "mongoose";
 import { Order } from "../models/order.model";
 import { uploadImage } from "../middleware/Cloudinary.middleware";
+import { Menu } from "../models/menu.model";
 
 export const createRestaurent = async (req: userRequest, res: Response) => {
   try {
@@ -76,9 +77,10 @@ export const getOwnerRestaurant = async (req: userRequest, res: Response) => {
 export const updateRestaurant = async (req: userRequest, res: Response) => {
   try {
     const user = req.user._id;
-    const restaurantId = req.params;
+    const { restaurantId } = req.params;
     const file = req.file;
     const { restaurantName, city, country, cuisines, deliveryTime } = req.body;
+
     const restaurant = await Restaurant.findOne({
       _id: restaurantId,
       owner: user,
@@ -123,15 +125,33 @@ export const deleteRestaurant = async (req: any, res: Response) => {
     const restaurantId = req.params.id;
 
     // Find the restaurant by ID and delete it
+
+    const restaurant = await Restaurant.findOne({ _id: restaurantId });
+    const arrayOfMenuId = restaurant?.menus;
+
+    arrayOfMenuId?.forEach(async (menuId) => {
+      const deletedMenu = await Menu.deleteOne({ _id: menuId.toString() });
+
+      if (!deletedMenu) {
+        return res.status(500).json({
+          success: false,
+          message: `menu delete failed of id:${menuId.toString()}`,
+        });
+      }
+    });
+
     const deletedRestaurant = await Restaurant.findByIdAndDelete(restaurantId);
 
     if (!deletedRestaurant) {
-      return res.status(404).json({ message: "Restaurant not found" });
+      return res
+        .status(404)
+        .json({ message: "Restaurant not found", success: false });
     }
 
     res.status(200).json({
+      success: true,
       message: "Restaurant deleted successfully",
-      data: deletedRestaurant,
+      // data: deletedRestaurant,
     });
   } catch (error) {
     console.error(error);
