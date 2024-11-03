@@ -19,6 +19,6 @@ menuRoutes.put(
   editMenu
 );
 
-menuRoutes.delete("/delete_menu/:id", verifyJWT, deleteMenu);
+menuRoutes.delete("/delete_menu/:restaurantId/:menuId", verifyJWT, deleteMenu);
 
 menuRoutes.get("/get_menus", verifyJWT, getMenus);

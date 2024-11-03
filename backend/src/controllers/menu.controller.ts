@@ -106,9 +106,34 @@ export const editMenu = async (req: any, res: Response) => {
 
 export const deleteMenu = async (req: any, res: Response) => {
   try {
-    const { id } = req.params;
+    const userId = req.user._id;
+    const { restaurantId, menuId } = req.params;
 
-    const deletedItem = Menu.findByIdAndDelete(id);
+    const restaurant = await Restaurant.findOne({
+      _id: restaurantId,
+      owner: userId,
+    });
+
+    if (!restaurant) {
+      return res.status(409).json({
+        success: false,
+        message: "restaurant not found",
+      });
+    }
+
+    const updatedMenuId = await Restaurant.updateOne(
+      { _id: restaurantId },
+      { $pull: { menus: menuId } }
+    );
+
+    if (updatedMenuId.modifiedCount === 0) {
+      return res.status(500).json({
+        success: false,
+        message: "Failed to remove the menu item. Please try again.",
+      });
+    }
+
+    const deletedItem = await Menu.findByIdAndDelete(menuId);
 
     if (!deletedItem) {
       return res.status(401).json({
