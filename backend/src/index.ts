@@ -12,7 +12,9 @@ const options = {
   httpOnly: true,
   secure: true,
 };
+
 connectDB();
+
 const app = express();
 app.use(express.json());
 app.use(

@@ -3,7 +3,7 @@ import RestaurantForm from "@/components/RestaurantForm";
 const page = () => {
   return (
     <>
-      <RestaurantForm />
+      <RestaurantForm isExistingRestaurant={false} />
     </>
   );
 };

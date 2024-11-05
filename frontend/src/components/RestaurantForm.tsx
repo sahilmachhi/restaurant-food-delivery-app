@@ -1,13 +1,22 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { any, z } from "zod";
+import { Form, useForm } from "react-hook-form";
+import { z } from "zod";
 import { Input } from "./ui/input";
 import CuisinesForm from "./CuisinesForm";
 import { Button } from "./ui/button";
-import { Checkbox } from "./ui/checkbox";
+import { useEffect } from "react";
+import { createRestaurant, updateRestaurant } from "@/utils/restaurnatApi";
 
-const RestaurantForm = () => {
+const RestaurantForm = ({
+  restaurantData,
+  isExistingRestaurant,
+  restaurantId,
+}: {
+  restaurantData?: any;
+  isExistingRestaurant: boolean;
+  restaurantId?: string;
+}) => {
   const formSchema = z.object({
     restaurantName: z.string({
       required_error: "restaurant name is required",
@@ -47,16 +56,58 @@ const RestaurantForm = () => {
     register,
     handleSubmit,
     reset,
-
+    control,
     formState: { errors },
   } = useForm<input>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      restaurantName: "",
+      city: "",
+      country: "",
+      deliveryTime: 0,
+      cuisines: [], // Ensure cuisines is always an array
+      imageUrl: null,
+    },
   });
 
-  const onSubmit = (form: input) => {
-    console.log("on submit is called");
+  useEffect(() => {
+    if (restaurantData) {
+      reset({
+        restaurantName: restaurantData.restaurantName || "",
+        city: restaurantData.city || "",
+        country: restaurantData.country || "",
+        deliveryTime: restaurantData.deliveryTime || "",
+        cuisines: restaurantData.cuisines || [],
+        imageUrl: null,
+      });
+    }
+  }, [restaurantData, reset]);
+  const onSubmit = async (form: input) => {
+    const formData = new FormData();
+    formData.append("restaurantName", form.restaurantName);
+    formData.append("city", form.city);
+    formData.append("country", form.country);
+    formData.append("deliveryTime", form.deliveryTime.toString());
+    formData.append("cuisines", JSON.stringify(form.cuisines));
+    if (form.imageUrl) {
+      formData.append("imageFile", form.imageUrl);
+      console.log("imageurl found");
+    }
+
     console.log(form);
+    if (isExistingRestaurant) {
+      let data = await updateRestaurant(formData, restaurantId);
+      console.log("restaurant update done");
+      if (data) {
+        console.log("Update response:", data);
+      } else {
+        console.log("Failed to update the restaurant");
+      }
+    } else {
+      createRestaurant(form);
+    }
   };
+
   return (
     <>
       <div className="w-full">
@@ -92,7 +143,7 @@ const RestaurantForm = () => {
             </div>
 
             <div className="flex flex-col gap-2 items-baseline justify-center w-[680px]">
-              <CuisinesForm register={register} />
+              <CuisinesForm control={control} />
             </div>
             <div className="flex flex-col gap-2 items-baseline justify-center w-[680px]">
               <label>Restaurant Image</label>
