@@ -11,15 +11,15 @@ export const createRestaurent = async (req: userRequest, res: Response) => {
     // const { restaurantName, city, country, cuisines, deliveryTime, imageUrl } =
     //   req.body;
     const user = req.user._id;
-    const existingRestaurant: any = await Restaurant.findOne({ owner: user });
+    // const existingRestaurant: any = await Restaurant.findOne({ owner: user });
     const file = req.file;
 
-    if (existingRestaurant) {
-      return res.status(409).json({
-        success: false,
-        message: "restaurant already exist",
-      });
-    }
+    // if (existingRestaurant) {
+    //   return res.status(409).json({
+    //     success: false,
+    //     message: "restaurant already exist",
+    //   });
+    // }
 
     // restaurant image code goes here
     if (!file) {
@@ -285,14 +285,14 @@ export const searchRestaurant = async (req: any, res: Response) => {
 
 export const getSingleRestaurant = async (req: any, res: Response) => {
   try {
-    const restaurantId = req.parmas.id;
+    const restaurantId = req.params.id;
 
     const restaurant = await Restaurant.findById(restaurantId);
 
     if (!restaurant) {
       return res.status(401).json({
         success: false,
-        message: "server error",
+        message: "restaurant not found",
       });
     }
 

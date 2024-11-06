@@ -3,12 +3,11 @@
   "typescript.suggest.paths": true,
   "javascript.suggest.paths": true,
   "path-intellisense.autoTriggerNextSuggestion": true,
-  "editor.fontSize": 14,
+  "editor.fontSize": 15,
   "editor.fontLigatures": true,
   "editor.letterSpacing": 0.6,
   "editor.lineHeight": 1.7,
-  "editor.smoothScrolling": false,
+  "editor.smoothScrolling": true,
   "editor.fontVariations": false,
-  "editor.fontFamily": "JetBrains Mono",
   "editor.codeLensFontSize": 1
 }

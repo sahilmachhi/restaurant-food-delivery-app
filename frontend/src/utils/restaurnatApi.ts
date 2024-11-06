@@ -29,7 +29,12 @@ export const createRestaurant = async (
     const data = await axios.post(
       `${process.env.NEXT_PUBLIC_SERVER_URL}/api/restaurant/create_restaurant`,
       form,
-      { withCredentials: true }
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
     );
 
     return { data };

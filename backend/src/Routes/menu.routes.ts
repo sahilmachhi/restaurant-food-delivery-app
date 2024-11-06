@@ -10,7 +10,12 @@ import {
 
 export const menuRoutes = Router();
 
-menuRoutes.post("/add_menu", verifyJWT, upload.single("imageFile"), addMenu);
+menuRoutes.post(
+  "/add_menu/:restuarantId",
+  verifyJWT,
+  upload.single("imageFile"),
+  addMenu
+);
 
 menuRoutes.put(
   "/edit_menu/:id",
@@ -21,4 +26,4 @@ menuRoutes.put(
 
 menuRoutes.delete("/delete_menu/:restaurantId/:menuId", verifyJWT, deleteMenu);
 
-menuRoutes.get("/get_menus", verifyJWT, getMenus);
+menuRoutes.get("/get_menus/:restaurantId", verifyJWT, getMenus);

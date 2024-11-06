@@ -13,13 +13,14 @@ const EditRestaurant = (props: urlProp) => {
   const restaurantId: string = params.slug;
   const [restaurant, setRestaurant] = useState({});
 
-  const getData = async () => {
+  const fetchRestaurant = async () => {
     await axios
       .get(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/restaurant/view_restaurant/${restaurantId}`
       )
       .then((res) => {
         const restaurant = res.data.restaurant;
+        console.log(restaurant);
         setRestaurant(restaurant);
       })
       .catch((error) => {
@@ -28,13 +29,13 @@ const EditRestaurant = (props: urlProp) => {
   };
 
   useEffect(() => {
-    getData();
+    fetchRestaurant();
   }, []);
 
   return (
     <>
       <RestaurantForm
-        restaurantData={restaurant}
+        restaurant={restaurant}
         restaurantId={restaurantId}
         isExistingRestaurant={true}
       />

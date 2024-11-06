@@ -1,5 +1,4 @@
 import RestaurantCard from "@/components/RestaurantCard";
-import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { cookies } from "next/headers";
 
@@ -17,7 +16,6 @@ const page = async () => {
       }
     );
     const restaurants = response.data.restaurant;
-    console.log(restaurants);
 
     return (
       <>

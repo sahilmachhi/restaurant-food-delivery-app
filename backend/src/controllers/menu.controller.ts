@@ -7,6 +7,7 @@ export const addMenu = async (req: any, res: Response) => {
   try {
     const { name, price, description } = req.body;
     const userId = req.user._id;
+    const restaurantId = req.params.restuarantId;
     const file = req.file;
 
     if (!(name && price && description)) {
@@ -25,6 +26,13 @@ export const addMenu = async (req: any, res: Response) => {
 
     const imageUrl = await uploadImage(file);
 
+    if (!imageUrl) {
+      return res.status(402).json({
+        success: false,
+        message: "can't get cloudinary URL of image",
+      });
+    }
+
     const menu = await Menu.create({
       name,
       description,
@@ -32,7 +40,10 @@ export const addMenu = async (req: any, res: Response) => {
       image: imageUrl,
     });
 
-    const restaurant = await Restaurant.findOne({ owner: userId });
+    const restaurant = await Restaurant.findOne({
+      owner: userId,
+      _id: restaurantId,
+    });
 
     if (!restaurant) {
       return res.status(401).json({
@@ -157,10 +168,14 @@ export const deleteMenu = async (req: any, res: Response) => {
 export const getMenus = async (req: any, res: Response) => {
   try {
     const userId = req.user._id;
+    const { restaurantId } = req.params;
 
-    const restaurant = await Restaurant.findOne({ owner: userId }).populate(
-      "menus"
-    );
+    console.log(restaurantId);
+
+    const restaurant = await Restaurant.findOne({
+      _id: restaurantId,
+      owner: userId,
+    }).populate("menus");
 
     if (!restaurant) {
       return res.status(404).json({

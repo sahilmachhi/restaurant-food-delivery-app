@@ -9,11 +9,11 @@ import { useEffect } from "react";
 import { createRestaurant, updateRestaurant } from "@/utils/restaurnatApi";
 
 const RestaurantForm = ({
-  restaurantData,
+  restaurant,
   isExistingRestaurant,
   restaurantId,
 }: {
-  restaurantData?: any;
+  restaurant?: any;
   isExistingRestaurant: boolean;
   restaurantId?: string;
 }) => {
@@ -71,24 +71,28 @@ const RestaurantForm = ({
   });
 
   useEffect(() => {
-    if (restaurantData) {
+    if (restaurant) {
+      console.log("reset running");
       reset({
-        restaurantName: restaurantData.restaurantName || "",
-        city: restaurantData.city || "",
-        country: restaurantData.country || "",
-        deliveryTime: restaurantData.deliveryTime || "",
-        cuisines: restaurantData.cuisines || [],
+        restaurantName: restaurant.restaurantName || "",
+        city: restaurant.city || "",
+        country: restaurant.country || "",
+        deliveryTime: restaurant.deliveryTime || "",
+        cuisines: restaurant.cuisines || [],
         imageUrl: null,
       });
     }
-  }, [restaurantData, reset]);
+  }, [restaurant, reset]);
+
   const onSubmit = async (form: input) => {
     const formData = new FormData();
     formData.append("restaurantName", form.restaurantName);
     formData.append("city", form.city);
     formData.append("country", form.country);
     formData.append("deliveryTime", form.deliveryTime.toString());
-    formData.append("cuisines", JSON.stringify(form.cuisines));
+    form.cuisines.forEach((cuisine: any, index: any) => {
+      formData.append(`cuisines[${index}]`, cuisine);
+    });
     if (form.imageUrl) {
       formData.append("imageFile", form.imageUrl);
       console.log("imageurl found");

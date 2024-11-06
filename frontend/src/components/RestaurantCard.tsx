@@ -19,13 +19,21 @@ const RestaurantCard = ({ restaurant }: { restaurant: any }) => {
         <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
           {restaurant.restaurantName}
         </h5>
-        <div className="flex justify-around items-center gap-3">
+        <div className="flex justify-center items-center gap-3">
           <Button className="bg-green-400 hover:bg-green-700">View</Button>
 
-          <Link href={`/myRestaurant/${restaurant._id}`}>
+          <Link href={`/myRestaurant/${restaurant._id}`} prefetch={false}>
             <Button>Edit</Button>
           </Link>
-          <Button variant={"destructive"}>Delete</Button>
+          <Link href={`/menus/${restaurant._id}`} prefetch={false}>
+            <Button>Edit Menus</Button>
+          </Link>
+          <Button
+            variant={"destructive"}
+            onClick={() => DeleteRestaurant(restaurant._id)}
+          >
+            Delete
+          </Button>
         </div>
       </div>
     </>

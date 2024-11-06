@@ -3,15 +3,15 @@
 import axios from "axios";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import AddressCard from "../../components/AddressCard";
-import { Address } from "../../utils/constants";
+import AddressCard from "@/components/AddressCard";
+import { Address } from "@/utils/constants";
 
 const UserAddress = () => {
   const [addresses, setAddresses] = useState<Address[]>([]);
 
   const fetchAddress = async () => {
     await axios
-      .get("http://localhost:5000/api/user/getAddress", {
+      .get(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/getAddress`, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -19,7 +19,6 @@ const UserAddress = () => {
       })
       .then((res) => {
         const response = res.data.userAddress;
-
         setAddresses(response);
       })
       .catch((error) => console.log(error));
@@ -27,12 +26,15 @@ const UserAddress = () => {
 
   const deleteAddress = async (addressUrl: string) => {
     await axios
-      .delete(`http://localhost:5000/api/user/deleteAddress/${addressUrl}`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      })
+      .delete(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/deleteAddress/${addressUrl}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      )
       .then((data) => {
         if (data.data.success) {
           fetchAddress();
