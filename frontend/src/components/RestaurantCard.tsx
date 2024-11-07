@@ -7,7 +7,13 @@ const RestaurantCard = ({ restaurant }: { restaurant: any }) => {
   const DeleteRestaurant = async (restaurantId: string) => {
     try {
       const response = await axios.delete(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/restaurant/delete_restaurant/${restaurantId}`
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/restaurant/delete_restaurant/${restaurantId}`,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       );
     } catch (error) {
       console.log(error);
@@ -30,7 +36,9 @@ const RestaurantCard = ({ restaurant }: { restaurant: any }) => {
           </Link>
           <Button
             variant={"destructive"}
-            onClick={() => DeleteRestaurant(restaurant._id)}
+            onClick={() => {
+              DeleteRestaurant(restaurant._id);
+            }}
           >
             Delete
           </Button>

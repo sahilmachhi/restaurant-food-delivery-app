@@ -1,6 +1,7 @@
 "use client";
 import MenuPage from "@/components/Menus";
-import axios from "axios";
+import { fetchMenus } from "@/utils/menuApi";
+
 import { use, useEffect, useState } from "react";
 
 interface urlProp {
@@ -14,31 +15,25 @@ const Menus = (props: urlProp) => {
   const restaurantId: string = params.restaurantId;
   const [menus, setMenus] = useState([]);
 
-  const fetchMenus = async () => {
-    await axios
-      .get(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/menu/get_menus/${restaurantId}`,
-        {
-          withCredentials: true,
-        }
-      )
-      .then((res) => {
-        const menus = res.data.menus;
-        console.log(menus);
-        setMenus(menus);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  const getMenus = async () => {
+    console.log("get menu called");
+    const { error, menus } = await fetchMenus(restaurantId);
 
+    if (error) {
+      console.error("Error fetching menus:", error);
+    } else if (menus) {
+      setMenus(menus);
+    }
+  };
   useEffect(() => {
-    fetchMenus();
+    if (restaurantId) {
+      getMenus();
+    }
   }, []);
 
   return (
     <>
-      <MenuPage menus={menus} setMenus={setMenus} />
+      <MenuPage menus={menus} restaurantId={restaurantId} getMenus={getMenus} />
     </>
   );
 };

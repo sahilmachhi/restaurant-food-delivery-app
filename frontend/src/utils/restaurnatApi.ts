@@ -1,3 +1,4 @@
+"use client";
 import axios from "axios";
 
 export const updateRestaurant = async (
@@ -11,7 +12,7 @@ export const updateRestaurant = async (
       {
         withCredentials: true,
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
         },
       }
     );
@@ -32,7 +33,7 @@ export const createRestaurant = async (
       {
         withCredentials: true,
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
         },
       }
     );

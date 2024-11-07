@@ -1,8 +1,18 @@
 import { useFormContext } from "react-hook-form";
 import { Button } from "./ui/button";
-import { Description } from "@radix-ui/react-dialog";
+import { deleteMenu } from "@/utils/menuApi";
 
-const MenuCard = ({ menu, setHidden }: { menu: any; setHidden: any }) => {
+const MenuCard = ({
+  menu,
+  setHidden,
+  restaurantId,
+  getMenus,
+}: {
+  menu: any;
+  setHidden: any;
+  restaurantId: string;
+  getMenus: any;
+}) => {
   const { reset } = useFormContext();
 
   const editMenuHandler = () => {
@@ -12,6 +22,7 @@ const MenuCard = ({ menu, setHidden }: { menu: any; setHidden: any }) => {
       description: menu.description || "",
       price: menu.price || "",
       imageUrl: null,
+      id: menu._id,
     });
   };
   return (
@@ -27,7 +38,10 @@ const MenuCard = ({ menu, setHidden }: { menu: any; setHidden: any }) => {
 
           <Button
             variant={"destructive"}
-            // onClick={() => DeleteRestaurant(restaurant._id)}
+            onClick={async () => {
+              await deleteMenu(restaurantId, menu._id);
+              getMenus();
+            }}
           >
             Delete
           </Button>

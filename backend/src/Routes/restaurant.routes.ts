@@ -28,6 +28,7 @@ restaurantRoutes.post(
 restaurantRoutes.put(
   "/update_restaurant/:restaurantId",
   verifyJWT,
+  upload.single("imageFile"),
   updateRestaurant
 );
 

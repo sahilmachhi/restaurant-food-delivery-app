@@ -7,6 +7,8 @@ import CuisinesForm from "./CuisinesForm";
 import { Button } from "./ui/button";
 import { useEffect } from "react";
 import { createRestaurant, updateRestaurant } from "@/utils/restaurnatApi";
+import { useRouter } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 const RestaurantForm = ({
   restaurant,
@@ -17,6 +19,7 @@ const RestaurantForm = ({
   isExistingRestaurant: boolean;
   restaurantId?: string;
 }) => {
+  const router = useRouter();
   const formSchema = z.object({
     restaurantName: z.string({
       required_error: "restaurant name is required",
@@ -34,7 +37,7 @@ const RestaurantForm = ({
     cuisines: z.array(z.string()).nonempty({
       message: "please select at least one item",
     }),
-    imageUrl: z.any(),
+    imageFile: z.any(),
     // menus: z.array(
     //   z.object({
     //     name: z.string().min(1, "name is required"),
@@ -66,7 +69,7 @@ const RestaurantForm = ({
       country: "",
       deliveryTime: 0,
       cuisines: [], // Ensure cuisines is always an array
-      imageUrl: null,
+      imageFile: null,
     },
   });
 
@@ -79,7 +82,7 @@ const RestaurantForm = ({
         country: restaurant.country || "",
         deliveryTime: restaurant.deliveryTime || "",
         cuisines: restaurant.cuisines || [],
-        imageUrl: null,
+        imageFile: null,
       });
     }
   }, [restaurant, reset]);
@@ -93,12 +96,11 @@ const RestaurantForm = ({
     form.cuisines.forEach((cuisine: any, index: any) => {
       formData.append(`cuisines[${index}]`, cuisine);
     });
-    if (form.imageUrl) {
-      formData.append("imageFile", form.imageUrl);
+    if (form.imageFile) {
       console.log("imageurl found");
+      formData.append("imageFile", form.imageFile[0]);
     }
 
-    console.log(form);
     if (isExistingRestaurant) {
       let data = await updateRestaurant(formData, restaurantId);
       console.log("restaurant update done");
@@ -108,7 +110,10 @@ const RestaurantForm = ({
         console.log("Failed to update the restaurant");
       }
     } else {
-      createRestaurant(form);
+      const data = await createRestaurant(formData);
+      console.log(data);
+      // revalidatePath("/myRestaurant");
+      router.push("/myRestaurant");
     }
   };
 
@@ -151,7 +156,7 @@ const RestaurantForm = ({
             </div>
             <div className="flex flex-col gap-2 items-baseline justify-center w-[680px]">
               <label>Restaurant Image</label>
-              <Input {...register("imageUrl")} type="file" />
+              <Input {...register("imageFile")} type="file" />
             </div>
             <Button type="submit">Submit</Button>
           </form>

@@ -7,20 +7,23 @@ import { Input } from "./ui/input";
 export const AddMenuSection = ({
   isHidden,
   setHidden,
+  handleFormSubmit,
+  isLoading,
 }: {
   isHidden: boolean;
   setHidden: any;
+  handleFormSubmit: any;
+  isLoading: boolean;
 }) => {
   const { register, handleSubmit, reset } = useFormContext();
 
-  const SubmitForm = () => {};
   return (
     <>
       <div>
         <div>
           {!isHidden ? (
             <form
-              // onSubmit={handleSubmit()}
+              onSubmit={handleSubmit(handleFormSubmit)}
               className="flex flex-row gap-20 justify-between items-center mb-12"
             >
               <div>
@@ -48,26 +51,38 @@ export const AddMenuSection = ({
                 </div>
               </div>
               <div className="flex gap-10 flex-col">
-                <Button type="submit">Submit</Button>
-                <Button
-                  onClick={() => {
-                    setHidden(true);
-                    reset({
-                      name: "",
-                      description: "",
-                      price: "",
-                      imageUrl: null,
-                    });
-                  }}
-                >
-                  Cancel
-                </Button>
+                {isLoading ? (
+                  <Button>Loading</Button>
+                ) : (
+                  <Button type="submit">Submit</Button>
+                )}
+                {isLoading ? null : (
+                  <Button
+                    onClick={() => {
+                      setHidden(true);
+                      reset({
+                        name: "",
+                        description: "",
+                        price: "",
+                        imageUrl: null,
+                      });
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                )}
               </div>
             </form>
           ) : null}
         </div>
         <Button
           onClick={() => {
+            reset({
+              name: "",
+              description: "",
+              price: "",
+              imageUrl: null,
+            });
             setHidden(false);
           }}
         >
