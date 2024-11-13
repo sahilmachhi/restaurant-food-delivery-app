@@ -4,6 +4,7 @@ import {
   deleteRestaurant,
   getOwnerRestaurant,
   getRestaurantOrder,
+  getRestaurants,
   getSingleRestaurant,
   searchRestaurant,
   updateRestaurant,
@@ -42,6 +43,11 @@ restaurantRoutes.put("/update_order", verifyJWT, updateRestaurantOrder);
 
 // public route
 
-restaurantRoutes.get("/search_restaurants/:search_text", searchRestaurant);
+restaurantRoutes.get(
+  "/search_restaurants/:search_text/:search_query",
+  searchRestaurant
+);
+
+restaurantRoutes.get("/get_all_restaurants", getRestaurants);
 
 restaurantRoutes.get("/view_restaurant/:id", getSingleRestaurant);

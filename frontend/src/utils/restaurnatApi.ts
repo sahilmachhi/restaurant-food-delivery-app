@@ -1,4 +1,3 @@
-"use client";
 import axios from "axios";
 
 export const updateRestaurant = async (
@@ -39,6 +38,18 @@ export const createRestaurant = async (
     );
 
     return { data };
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getAllRestaurants = async () => {
+  try {
+    const data = await axios.get(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/restaurant/get_all_restaurants`
+    );
+    const result = data;
+    return { result };
   } catch (error) {
     console.log(error);
   }

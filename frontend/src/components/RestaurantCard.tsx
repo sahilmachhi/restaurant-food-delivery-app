@@ -2,8 +2,10 @@
 import Link from "next/link";
 import { Button } from "./ui/button";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const RestaurantCard = ({ restaurant }: { restaurant: any }) => {
+  const router = useRouter();
   const DeleteRestaurant = async (restaurantId: string) => {
     try {
       const response = await axios.delete(
@@ -15,6 +17,9 @@ const RestaurantCard = ({ restaurant }: { restaurant: any }) => {
           },
         }
       );
+      if (response) {
+        router.refresh();
+      }
     } catch (error) {
       console.log(error);
     }

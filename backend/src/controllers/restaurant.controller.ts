@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { Response, Request } from "express";
 import { Restaurant } from "../models/restaurant.model";
 import { userRequest } from "./user.controller";
 import mongoose from "mongoose";
@@ -231,7 +231,9 @@ export const updateRestaurantOrder = async (req: any, res: Response) => {
 export const searchRestaurant = async (req: any, res: Response) => {
   try {
     const searchText: string = req.params.search_text || "";
-    const searchQuery: string = req.query.search_query || "";
+    const searchQuery: string = req.params.search_query || "";
+    console.log(`searchtext: ${searchText}`);
+    console.log(`searchQuery: ${searchQuery}`);
     // this code should be reviewed
     const selectedCuisines = ((req.query.selected_cuisines as string) || "")
       .split(",")
@@ -264,7 +266,7 @@ export const searchRestaurant = async (req: any, res: Response) => {
 
     const restuarants = await Restaurant.find(Query);
 
-    if (!Restaurant) {
+    if (!restuarants) {
       return res.status(401).json({
         success: false,
         message: "no restaurant found with this filter",
@@ -283,6 +285,28 @@ export const searchRestaurant = async (req: any, res: Response) => {
   }
 };
 
+export const getRestaurants = async (req: Request, res: Response) => {
+  try {
+    const restuarants = await Restaurant.find();
+
+    if (!restuarants) {
+      return res.status(500).json({
+        success: false,
+        message: "no restaurant available",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      restuarants,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "server error",
+    });
+  }
+};
 export const getSingleRestaurant = async (req: any, res: Response) => {
   try {
     const restaurantId = req.params.id;

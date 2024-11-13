@@ -8,7 +8,6 @@ import { Button } from "./ui/button";
 import { useEffect } from "react";
 import { createRestaurant, updateRestaurant } from "@/utils/restaurnatApi";
 import { useRouter } from "next/navigation";
-import { revalidatePath } from "next/cache";
 
 const RestaurantForm = ({
   restaurant,
