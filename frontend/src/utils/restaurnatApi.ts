@@ -48,9 +48,10 @@ export const getAllRestaurants = async () => {
     const data = await axios.get(
       `${process.env.NEXT_PUBLIC_SERVER_URL}/api/restaurant/get_all_restaurants`
     );
-    const result = data;
-    return { result };
+    const restaurants = data.data.restuarants;
+    return { restaurants };
   } catch (error) {
     console.log(error);
+    return { error };
   }
 };
