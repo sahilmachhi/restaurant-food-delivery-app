@@ -1,3 +1,4 @@
+import { searchState } from "@/components/HomePage";
 import axios from "axios";
 
 export const updateRestaurant = async (
@@ -52,6 +53,20 @@ export const getAllRestaurants = async () => {
     return { restaurants };
   } catch (error) {
     console.log(error);
+    return { error };
+  }
+};
+
+export const searchRestaurant = (searchState: searchState) => {
+  try {
+    const params = new URLSearchParams();
+    params.set("searchQuery", searchState.searchQuery);
+    params.set("selectedCuisines", searchState.selectedCuisines.join(","));
+    // params.set("page", searchState.page.toString());
+    // params.set("sortOption", searchState.sortOption);
+
+    console.log(params.toString());
+  } catch (error) {
     return { error };
   }
 };
