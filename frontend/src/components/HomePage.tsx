@@ -58,7 +58,7 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    searchRestaurant(searchState); // Call your API with the latest filter
+    searchRestaurant(searchState);
   }, [searchState]);
 
   const resetSearch = () => {

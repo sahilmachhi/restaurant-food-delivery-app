@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import { restaurantRoutes } from "./Routes/restaurant.routes";
 import { menuRoutes } from "./Routes/menu.routes";
 import { orderRoutes } from "./Routes/order.routes";
+import { cartRoutes } from "./Routes/cart.routes";
 
 const options = {
   httpOnly: true,
@@ -45,6 +46,7 @@ app.use("/api/user", userRoutes);
 app.use("/api/restaurant", restaurantRoutes);
 app.use("/api/menu", menuRoutes);
 app.use("/api/order", orderRoutes);
+app.use("/api/cart", cartRoutes);
 
 app.listen(5000, () => {
   console.log("app is running on port 5000");

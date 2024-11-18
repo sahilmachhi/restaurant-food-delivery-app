@@ -311,7 +311,9 @@ export const getSingleRestaurant = async (req: any, res: Response) => {
   try {
     const restaurantId = req.params.id;
 
-    const restaurant = await Restaurant.findById(restaurantId);
+    const restaurant = await Restaurant.findById(restaurantId).populate(
+      "menus"
+    );
 
     if (!restaurant) {
       return res.status(401).json({

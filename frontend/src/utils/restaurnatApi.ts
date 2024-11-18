@@ -70,3 +70,14 @@ export const searchRestaurant = (searchState: searchState) => {
     return { error };
   }
 };
+
+export const getSingleRestaurant = async (restuarantId: string) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/restaurant/view_restaurant/${restuarantId}`
+    );
+    return { restaurantData: response.data.restaurant };
+  } catch (error) {
+    return { error };
+  }
+};
