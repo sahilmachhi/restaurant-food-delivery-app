@@ -38,9 +38,10 @@ export const verifyJWT = async (
 
     req.user = user;
     next();
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json({
       success: false,
+      error: error.message,
       message: `middleware error`,
     });
   }

@@ -12,7 +12,7 @@ export const addCart = async (req: any, res: Response) => {
     });
 
     if (!cart) {
-      cart = new Cart({ userId });
+      cart = new Cart({ userId: new mongoose.Types.ObjectId(userId) });
     }
 
     const itemIndex = cart.items.findIndex(
@@ -86,17 +86,37 @@ export const removeCart = async (req: any, res: Response) => {
 
 export const incrementQty = async (req: any, res: Response) => {
   try {
+    console.log("incrementQty fn running");
     const userId = req.user._id;
     const productId = req.params.id;
 
-    const cart = await Cart.findOne({
-      userId: new mongoose.Types.ObjectId(userId),
-    });
+    // const item = await Cart.findOne({
+    //   userId: new mongoose.Types.ObjectId(userId),
+    // }).populate({ path: "items.productId", model: "Menu" });
 
-    if (!cart) {
-      return res.status(401).json({
-        success: false,
-        message: "no cart found",
+    // if (!cart) {
+    //   return res.status(401).json({
+    //     success: false,
+    //     message: "no cart found",
+    //   });
+    // }
+
+    const productToBeUpdated: any = await Cart.find(
+      {
+        userId: new mongoose.Types.ObjectId(userId),
+        items: {
+          $elemMatch: { productId: new mongoose.Types.ObjectId(productId) },
+        },
+      },
+      {
+        "items.$": 1,
+      }
+    ).populate({ path: "items.productId", model: "Menu" });
+    if (productToBeUpdated) {
+      const item = productToBeUpdated[0].items;
+      return res.status(200).json({
+        success: true,
+        data: item,
       });
     }
   } catch (error) {

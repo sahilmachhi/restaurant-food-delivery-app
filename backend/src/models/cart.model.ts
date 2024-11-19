@@ -12,7 +12,7 @@ interface ICart extends Document {
 
 const CartItemSchema = new Schema<CartItem>({
   productId: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "Menu",
     required: true,
   },
