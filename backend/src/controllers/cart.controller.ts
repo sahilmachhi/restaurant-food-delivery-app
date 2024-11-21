@@ -101,24 +101,28 @@ export const incrementQty = async (req: any, res: Response) => {
     //   });
     // }
 
-    const productToBeUpdated: any = await Cart.find(
+    const updatedCart = await Cart.updateOne(
       {
         userId: new mongoose.Types.ObjectId(userId),
-        items: {
-          $elemMatch: { productId: new mongoose.Types.ObjectId(productId) },
-        },
+        "items._id": new mongoose.Types.ObjectId(productId), // Match the specific item
       },
       {
-        "items.$": 1,
+        $inc: { "items.$.quantity": 1 }, // Increment the quantity of the matched item
       }
-    ).populate({ path: "items.productId", model: "Menu" });
-    if (productToBeUpdated) {
-      const item = productToBeUpdated[0].items;
-      return res.status(200).json({
-        success: true,
-        data: item,
+    );
+
+    if (updatedCart.matchedCount === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Item not found in the cart",
       });
     }
+
+    return res.status(200).json({
+      success: true,
+      message: "Item quantity incremented successfully",
+      data: updatedCart,
+    });
   } catch (error) {
     return res.status(500).json({
       success: false,
@@ -132,16 +136,29 @@ export const decrementQty = async (req: any, res: Response) => {
     const userId = req.user._id;
     const productId = req.params.id;
 
-    const cart = await Cart.findOne({
-      userId: new mongoose.Types.ObjectId(userId),
-    });
+    const updatedCart = await Cart.updateOne(
+      {
+        userId: new mongoose.Types.ObjectId(userId),
+        "items._id": new mongoose.Types.ObjectId(productId),
+        "items.quantity": { $gt: 1 }, // Match the specific item
+      },
+      {
+        $inc: { "items.$.quantity": -1 }, // decrement the quantity of the matched item
+      }
+    );
 
-    if (!cart) {
-      return res.status(401).json({
+    if (updatedCart.matchedCount === 0) {
+      return res.status(404).json({
         success: false,
-        message: "no cart found",
+        message: "Item not found in the cart",
       });
     }
+
+    return res.status(200).json({
+      success: true,
+      message: "Item quantity decremented successfully",
+      data: updatedCart,
+    });
   } catch (error) {
     return res.status(500).json({
       success: false,
@@ -156,7 +173,7 @@ export const viewCart = async (req: any, res: Response) => {
 
     const cart = await Cart.findOne({
       userId: new mongoose.Types.ObjectId(userId),
-    });
+    }).populate({ path: "items.productId", model: "Menu" });
 
     if (!cart) {
       return res.status(401).json({
