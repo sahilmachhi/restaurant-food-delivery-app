@@ -1,7 +1,25 @@
+import { addToCart } from "@/utils/cartApi";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardFooter } from "./ui/card";
 
 const AvailableMenus = ({ menus }: { menus: any }) => {
+  const addCart = async (itemId: string) => {
+    try {
+      console.log(itemId);
+      const { cartData, error } = await addToCart(itemId);
+      console.log(cartData);
+
+      if (cartData) {
+        // await fetchCart();
+      } else {
+        console.log(error);
+        // setError(error);
+      }
+    } catch (error: any) {
+      // setError(error);
+    }
+  };
+
   return (
     <>
       <div className="md:p-4">
@@ -31,7 +49,7 @@ const AvailableMenus = ({ menus }: { menus: any }) => {
               <CardFooter className="p-4">
                 <Button
                   onClick={() => {
-                    // addToCart(menu);
+                    addCart(menu._id);
                     // navigate("/cart");
                   }}
                   className="w-full bg-gray-700 hover:bg-gray-900"

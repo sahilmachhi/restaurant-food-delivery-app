@@ -10,7 +10,13 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
-import { decreaseQty, getCarts, incrementQty } from "@/utils/cartApi";
+import {
+  clearCart,
+  decreaseQty,
+  getCarts,
+  incrementQty,
+  removeItem,
+} from "@/utils/cartApi";
 import { Minus, Plus } from "lucide-react";
 
 const Cart = () => {
@@ -76,6 +82,39 @@ const Cart = () => {
     }
   };
 
+  const removeFromCart = async (itemId: string) => {
+    try {
+      console.log(itemId);
+      const { cartData, error } = await removeItem(itemId);
+      console.log(cartData);
+
+      if (cartData) {
+        await fetchCart();
+      } else {
+        console.log(error);
+        // setError(error);
+      }
+    } catch (error: any) {
+      setError(error);
+    }
+  };
+
+  const clearAllCart = async () => {
+    try {
+      const { cartData, error } = await clearCart();
+      console.log(cartData);
+
+      if (cartData) {
+        await fetchCart();
+      } else {
+        console.log(error);
+        // setError(error);
+      }
+    } catch (error: any) {
+      setError(error);
+    }
+  };
+
   useEffect(() => {
     fetchCart();
   }, []);
@@ -83,7 +122,9 @@ const Cart = () => {
     <>
       <div className="flex flex-col max-w-7xl mx-auto my-10">
         <div className="flex justify-end">
-          <Button variant="link">Clear All</Button>
+          <Button variant="link" onClick={() => clearAllCart()}>
+            Clear All
+          </Button>
         </div>
         <Table>
           <TableHeader>
@@ -151,6 +192,7 @@ const Cart = () => {
                   <Button
                     size={"sm"}
                     className="bg-red-500 hover:bg-hoverOrange"
+                    onClick={() => removeFromCart(item._id)}
                   >
                     Remove
                   </Button>

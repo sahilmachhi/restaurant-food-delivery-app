@@ -59,7 +59,7 @@ export const removeCart = async (req: any, res: Response) => {
 
     const updatedCart = await Cart.findOneAndUpdate(
       { userId },
-      { $pull: { items: { productId } } },
+      { $pull: { items: { _id: productId } } },
       { new: true }
     );
 
