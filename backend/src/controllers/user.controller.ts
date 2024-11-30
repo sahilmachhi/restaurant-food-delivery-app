@@ -135,7 +135,7 @@ export const loginUser = async (req: Request, res: Response) => {
 
     const options = {
       httpOnly: true,
-      secure: true,
+      secure: false,
       expires: expiryDate,
     };
     console.log(accessToken);

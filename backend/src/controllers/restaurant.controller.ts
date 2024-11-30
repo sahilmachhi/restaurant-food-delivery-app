@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 import { Order } from "../models/order.model";
 import { uploadImage } from "../middleware/Cloudinary.middleware";
 
-export const createRestaurent = async (req: userRequest, res: Response) => {
+export const createRestaurent = async (req: any, res: Response) => {
   try {
     // const { restaurantName, city, country, cuisines, deliveryTime, imageUrl } =
     //   req.body;
