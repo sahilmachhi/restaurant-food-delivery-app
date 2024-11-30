@@ -34,16 +34,14 @@ export const verifyJWT = async (
       });
     }
 
-    console.log(CookieData);
     const user = await User.findById(CookieData.id);
-
-    console.log(user);
 
     req.user = user;
     next();
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json({
       success: false,
+      error: error.message,
       message: `middleware error`,
     });
   }

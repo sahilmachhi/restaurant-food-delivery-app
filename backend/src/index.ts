@@ -5,12 +5,17 @@ import { connectDB } from "./db";
 import { userRoutes } from "./Routes/user.routes";
 import cookieParser from "cookie-parser";
 import { restaurantRoutes } from "./Routes/restaurant.routes";
+import { menuRoutes } from "./Routes/menu.routes";
+import { orderRoutes } from "./Routes/order.routes";
+import { cartRoutes } from "./Routes/cart.routes";
 
 const options = {
   httpOnly: true,
   secure: true,
 };
+
 connectDB();
+
 const app = express();
 app.use(express.json());
 app.use(
@@ -32,11 +37,16 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 // always use cookie parser for cookie oprations
 app.use(cookieParser());
 app.get("/", async (req: Request, res: Response) => {
-  res.cookie("hello", "lol", options).json({ message: "hello from server" });
+  res
+    .cookie("hello", "lol", options)
+    .json({ message: "hello from restaurant server" });
 });
 
 app.use("/api/user", userRoutes);
 app.use("/api/restaurant", restaurantRoutes);
+app.use("/api/menu", menuRoutes);
+app.use("/api/order", orderRoutes);
+app.use("/api/cart", cartRoutes);
 
 app.listen(5000, () => {
   console.log("app is running on port 5000");

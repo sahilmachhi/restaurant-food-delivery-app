@@ -1,13 +1,24 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { any, z } from "zod";
+import { Form, useForm } from "react-hook-form";
+import { z } from "zod";
 import { Input } from "./ui/input";
 import CuisinesForm from "./CuisinesForm";
 import { Button } from "./ui/button";
-import { Checkbox } from "./ui/checkbox";
+import { useEffect } from "react";
+import { createRestaurant, updateRestaurant } from "@/utils/restaurnatApi";
+import { useRouter } from "next/navigation";
 
-const RestaurantForm = () => {
+const RestaurantForm = ({
+  restaurant,
+  isExistingRestaurant,
+  restaurantId,
+}: {
+  restaurant?: any;
+  isExistingRestaurant: boolean;
+  restaurantId?: string;
+}) => {
+  const router = useRouter();
   const formSchema = z.object({
     restaurantName: z.string({
       required_error: "restaurant name is required",
@@ -25,7 +36,7 @@ const RestaurantForm = () => {
     cuisines: z.array(z.string()).nonempty({
       message: "please select at least one item",
     }),
-    imageUrl: z.any(),
+    imageFile: z.any(),
     // menus: z.array(
     //   z.object({
     //     name: z.string().min(1, "name is required"),
@@ -47,16 +58,64 @@ const RestaurantForm = () => {
     register,
     handleSubmit,
     reset,
-
+    control,
     formState: { errors },
   } = useForm<input>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      restaurantName: "",
+      city: "",
+      country: "",
+      deliveryTime: 0,
+      cuisines: [], // Ensure cuisines is always an array
+      imageFile: null,
+    },
   });
 
-  const onSubmit = (form: input) => {
-    console.log("on submit is called");
-    console.log(form);
+  useEffect(() => {
+    if (restaurant) {
+      console.log("reset running");
+      reset({
+        restaurantName: restaurant.restaurantName || "",
+        city: restaurant.city || "",
+        country: restaurant.country || "",
+        deliveryTime: restaurant.deliveryTime || "",
+        cuisines: restaurant.cuisines || [],
+        imageFile: null,
+      });
+    }
+  }, [restaurant, reset]);
+
+  const onSubmit = async (form: input) => {
+    const formData = new FormData();
+    formData.append("restaurantName", form.restaurantName);
+    formData.append("city", form.city);
+    formData.append("country", form.country);
+    formData.append("deliveryTime", form.deliveryTime.toString());
+    form.cuisines.forEach((cuisine: any, index: any) => {
+      formData.append(`cuisines[${index}]`, cuisine);
+    });
+    if (form.imageFile) {
+      console.log("imageurl found");
+      formData.append("imageFile", form.imageFile[0]);
+    }
+
+    if (isExistingRestaurant) {
+      let data = await updateRestaurant(formData, restaurantId);
+      console.log("restaurant update done");
+      if (data) {
+        console.log("Update response:", data);
+      } else {
+        console.log("Failed to update the restaurant");
+      }
+    } else {
+      const data = await createRestaurant(formData);
+      console.log(data);
+      // revalidatePath("/myRestaurant");
+      router.push("/myRestaurant");
+    }
   };
+
   return (
     <>
       <div className="w-full">
@@ -92,11 +151,11 @@ const RestaurantForm = () => {
             </div>
 
             <div className="flex flex-col gap-2 items-baseline justify-center w-[680px]">
-              <CuisinesForm register={register} />
+              <CuisinesForm control={control} />
             </div>
             <div className="flex flex-col gap-2 items-baseline justify-center w-[680px]">
               <label>Restaurant Image</label>
-              <Input {...register("imageUrl")} type="file" />
+              <Input {...register("imageFile")} type="file" />
             </div>
             <Button type="submit">Submit</Button>
           </form>

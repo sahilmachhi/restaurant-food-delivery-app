@@ -18,7 +18,7 @@ export async function middleware(request: NextRequest) {
         },
       }
     );
-    console.log("user is found from middlware", response.data);
+    // console.log("user is found from middlware", response.data);
   } catch (error) {
     console.log(error);
   }

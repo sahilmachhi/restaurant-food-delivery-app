@@ -13,8 +13,8 @@ interface urlProp {
 
 const EditAddress = (props: urlProp) => {
   const params = use(props.params);
-  const Router = useRouter();
   const addressId: string = params.slug;
+  const Router = useRouter();
   const [address, setAddress] = useState<Address | any>({});
 
   const updateAddressData = async (address: any) => {

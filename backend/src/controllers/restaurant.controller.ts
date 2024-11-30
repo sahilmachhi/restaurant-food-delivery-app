@@ -1,24 +1,25 @@
-import { Response } from "express";
+import { Response, Request } from "express";
 import { Restaurant } from "../models/restaurant.model";
 import { userRequest } from "./user.controller";
 import mongoose from "mongoose";
 import { Order } from "../models/order.model";
 import { uploadImage } from "../middleware/Cloudinary.middleware";
+import { Menu } from "../models/menu.model";
 
 export const createRestaurent = async (req: any, res: Response) => {
   try {
     // const { restaurantName, city, country, cuisines, deliveryTime, imageUrl } =
     //   req.body;
     const user = req.user._id;
-    const existingRestaurant: any = await Restaurant.findOne({ owner: user });
+    // const existingRestaurant: any = await Restaurant.findOne({ owner: user });
     const file = req.file;
 
-    if (existingRestaurant) {
-      return res.status(409).json({
-        success: false,
-        message: "restaurant already exist",
-      });
-    }
+    // if (existingRestaurant) {
+    //   return res.status(409).json({
+    //     success: false,
+    //     message: "restaurant already exist",
+    //   });
+    // }
 
     // restaurant image code goes here
     if (!file) {
@@ -27,13 +28,13 @@ export const createRestaurent = async (req: any, res: Response) => {
         message: "please upload Restuarant Image",
       });
     }
-
-    const imageUrl = await uploadImage(file);
-
     const restaurant = new Restaurant(req.body);
 
+    const imageUrl = await uploadImage(file);
     restaurant.imageUrl = imageUrl;
+
     restaurant.owner = new mongoose.Types.ObjectId(user);
+
     await restaurant.save();
 
     return res.status(200).json({
@@ -52,7 +53,7 @@ export const getOwnerRestaurant = async (req: userRequest, res: Response) => {
   try {
     const user = req.user._id;
 
-    const restaurant = await Restaurant.find({ user: user });
+    const restaurant = await Restaurant.find({ owner: user });
 
     if (!restaurant) {
       return res.status(409).json({
@@ -76,8 +77,10 @@ export const getOwnerRestaurant = async (req: userRequest, res: Response) => {
 export const updateRestaurant = async (req: userRequest, res: Response) => {
   try {
     const user = req.user._id;
-    const restaurantId = req.params;
+    const { restaurantId } = req.params;
+    const file = req.file;
     const { restaurantName, city, country, cuisines, deliveryTime } = req.body;
+
     const restaurant = await Restaurant.findOne({
       _id: restaurantId,
       owner: user,
@@ -97,9 +100,10 @@ export const updateRestaurant = async (req: userRequest, res: Response) => {
     restaurant.cuisines = cuisines;
 
     // image handling from here
-    // if(file) {
-
-    // }
+    if (file) {
+      const imageUrl = await uploadImage(file);
+      restaurant.imageUrl = imageUrl;
+    }
 
     await restaurant.save();
 
@@ -113,6 +117,45 @@ export const updateRestaurant = async (req: userRequest, res: Response) => {
       success: false,
       message: "server error",
     });
+  }
+};
+
+export const deleteRestaurant = async (req: any, res: Response) => {
+  try {
+    const restaurantId = req.params.id;
+
+    // Find the restaurant by ID and delete it
+
+    const restaurant = await Restaurant.findOne({ _id: restaurantId });
+    const arrayOfMenuId = restaurant?.menus;
+
+    arrayOfMenuId?.forEach(async (menuId) => {
+      const deletedMenu = await Menu.deleteOne({ _id: menuId.toString() });
+
+      if (!deletedMenu) {
+        return res.status(500).json({
+          success: false,
+          message: `menu delete failed of id:${menuId.toString()}`,
+        });
+      }
+    });
+
+    const deletedRestaurant = await Restaurant.findByIdAndDelete(restaurantId);
+
+    if (!deletedRestaurant) {
+      return res
+        .status(404)
+        .json({ message: "Restaurant not found", success: false });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Restaurant deleted successfully",
+      // data: deletedRestaurant,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -187,10 +230,12 @@ export const updateRestaurantOrder = async (req: any, res: Response) => {
 
 export const searchRestaurant = async (req: any, res: Response) => {
   try {
-    const searchText: string = req.params.searchText || "";
-    const searchQuery: string = req.params.searchQuery || "";
+    const searchText: string = req.params.search_text || "";
+    const searchQuery: string = req.params.search_query || "";
+    console.log(`searchtext: ${searchText}`);
+    console.log(`searchQuery: ${searchQuery}`);
     // this code should be reviewed
-    const selectedCuisines = ((req.params.selectedCuisines as string) || "")
+    const selectedCuisines = ((req.query.selected_cuisines as string) || "")
       .split(",")
       .filter((cuisine) => cuisine);
 
@@ -221,7 +266,7 @@ export const searchRestaurant = async (req: any, res: Response) => {
 
     const restuarants = await Restaurant.find(Query);
 
-    if (!Restaurant) {
+    if (!restuarants) {
       return res.status(401).json({
         success: false,
         message: "no restaurant found with this filter",
@@ -240,16 +285,40 @@ export const searchRestaurant = async (req: any, res: Response) => {
   }
 };
 
+export const getRestaurants = async (req: Request, res: Response) => {
+  try {
+    const restuarants = await Restaurant.find();
+
+    if (!restuarants) {
+      return res.status(500).json({
+        success: false,
+        message: "no restaurant available",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      restuarants,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "server error",
+    });
+  }
+};
 export const getSingleRestaurant = async (req: any, res: Response) => {
   try {
-    const restaurantId = req.parmas.id;
+    const restaurantId = req.params.id;
 
-    const restaurant = await Restaurant.findById(restaurantId);
+    const restaurant = await Restaurant.findById(restaurantId).populate(
+      "menus"
+    );
 
     if (!restaurant) {
       return res.status(401).json({
         success: false,
-        message: "server error",
+        message: "restaurant not found",
       });
     }
 

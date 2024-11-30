@@ -175,7 +175,7 @@ export const logoutUser = async (req: userRequest, res: Response) => {
 
     const options = {
       httpOnly: true,
-      secure: true,
+      secure: false,
     };
     res
       .clearCookie("accessToken", options)

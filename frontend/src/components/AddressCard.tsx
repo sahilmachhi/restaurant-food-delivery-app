@@ -28,7 +28,11 @@ const AddressCard = ({
             <h1>{address._id}</h1>
           </div>
           <div className="flex gap-2 w-full md:flex-row flex-col justify-center items-center mt-5">
-            <Link href={`/address/${address._id}`} className="w-full">
+            <Link
+              href={`/address/${address._id}`}
+              prefetch={false}
+              className="w-full"
+            >
               <Button className="w-full bg-yellow-300 text-black hover:bg-yellow-700 hover:text-white">
                 edit
               </Button>
