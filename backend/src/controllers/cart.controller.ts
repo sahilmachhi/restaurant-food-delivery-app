@@ -1,12 +1,14 @@
 import { Response } from "express";
 import { Cart, ICart } from "../models/cart.model";
 import mongoose from "mongoose";
+import { Restaurant } from "../models/restaurant.model";
 
 export const addCart = async (req: any, res: Response) => {
   try {
     const userId = req.user._id;
     const productId = req.params.id;
     const quantity = 1;
+
     let cart: ICart | null = await Cart.findOne({
       userId: new mongoose.Types.ObjectId(userId),
     });
@@ -14,6 +16,18 @@ export const addCart = async (req: any, res: Response) => {
     if (!cart) {
       cart = new Cart({ userId: new mongoose.Types.ObjectId(userId) });
     }
+
+    const restaurant = await Restaurant.findOne({
+      menus: { $in: productId },
+    });
+    if (!restaurant) {
+      return res.status(404).json({
+        success: false,
+        message: "cant find restaurant",
+      });
+    }
+    const restaurantId = new mongoose.Types.ObjectId(restaurant._id);
+    console.log(restaurantId);
 
     const itemIndex = cart.items.findIndex(
       (item) => item.productId.toString() === productId
@@ -24,7 +38,7 @@ export const addCart = async (req: any, res: Response) => {
       cart.items[itemIndex].quantity += quantity;
     } else {
       // Item does not exist, push new item to the array
-      cart.items.push({ productId, quantity });
+      cart.items.push({ productId, quantity, restaurantId });
     }
 
     await (cart as any).save();

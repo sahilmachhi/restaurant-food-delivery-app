@@ -17,13 +17,42 @@ import {
   incrementQty,
   removeItem,
 } from "@/utils/cartApi";
-import { Minus, Plus } from "lucide-react";
+import { Heading1, Minus, Plus } from "lucide-react";
+import { Address } from "@/utils/constants";
+import axios from "axios";
+import AddressCard from "./AddressCard";
 
 const Cart = () => {
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [open, setOpen] = useState(false);
+
+  const [addresses, setAddresses] = useState<Address[]>([]);
+
+  const fetchAddress = async () => {
+    await axios
+      .get(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/getAddress`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      })
+      .then((res) => {
+        const response = res.data.userAddress;
+        setAddresses(response);
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const orderNow = async (address: any) => {
+    const orderDetails = {
+      address,
+      cart,
+      totalPrice,
+    };
+  };
 
   const fetchCart = async () => {
     try {
@@ -117,10 +146,35 @@ const Cart = () => {
 
   useEffect(() => {
     fetchCart();
+    fetchAddress();
   }, []);
   return (
     <>
-      <div className="flex flex-col max-w-7xl mx-auto my-10">
+      {open ? (
+        <div className="absolute z-20 flex flex-col items-center  h-[380px]  bg-white">
+          <div className="flex justify-between items-center w-full mx-auto">
+            <div className="text-center flex-1">select address from here</div>
+            <div
+              className="flex-none cursor-pointer"
+              onClick={() => setOpen(false)}
+            >
+              close
+            </div>
+          </div>
+
+          <div className=" p-10 grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-3 overflow-y-scroll">
+            {addresses.map((address) => (
+              <AddressCard
+                key={address._id}
+                address={address}
+                orderNow={orderNow}
+                setOpen={setOpen}
+              />
+            ))}
+          </div>
+        </div>
+      ) : null}
+      <div className="flex flex-col max-w-7xl mx-auto my-10 relative">
         <div className="flex justify-end">
           <Button variant="link" onClick={() => clearAllCart()}>
             Clear All
@@ -207,13 +261,8 @@ const Cart = () => {
             </TableRow>
           </TableFooter>
         </Table>
-        <div className="flex justify-end my-5">
-          <Button
-            // onClick={() => setOpen(true)}
-            className="bg-orange hover:bg-hoverOrange"
-          >
-            Proceed To Checkout
-          </Button>
+        <div className="flex justify-end my-5 ">
+          <Button onClick={() => setOpen(true)}>Proceed To Checkout</Button>
         </div>
         {/* <CheckoutConfirmPage open={open} setOpen={setOpen} /> */}
       </div>

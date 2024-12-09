@@ -1,18 +1,6 @@
 import mongoose, { model, Schema } from "mongoose";
-
-const DeliverySchema = new Schema({
-  email: { type: String, required: true },
-  name: { type: String, required: true },
-  address: { type: String, required: true },
-  city: { type: String, required: true },
-});
-
-const CartSchema = new Schema({
-  menuId: { type: String, required: true },
-  name: { type: String, required: true },
-  image: { type: String, required: true },
-  price: { type: String, require: true },
-});
+import { addressSchema } from "./user.model";
+import { CartItemSchema } from "./cart.model";
 
 const orderSchema = new Schema(
   {
@@ -21,13 +9,8 @@ const orderSchema = new Schema(
       ref: "User",
       required: true,
     },
-    restaurant: {
-      type: Schema.Types.ObjectId,
-      ref: "Restaurant",
-      required: true,
-    },
-    deliveryDetails: DeliverySchema,
-    cartItems: [CartSchema],
+    address: addressSchema,
+    cartItems: [CartItemSchema],
     totalAmount: Number,
     status: {
       type: String,
@@ -42,5 +25,12 @@ const orderSchema = new Schema(
   },
   { timestamps: true }
 );
+
+const NewOrderSchema = new Schema({
+  status: {
+    type: String,
+    enum: ["pending", "confirmed", "preparing", "outForDelivery", "delivered"],
+  },
+});
 
 export const Order = model("Orders", orderSchema);

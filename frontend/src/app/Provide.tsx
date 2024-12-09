@@ -12,7 +12,7 @@ export const Provider = ({
         <Header />
 
         {/* body */}
-        <div className="container mx-auto flex-1 py-10  flex flex-col items-center">
+        <div className="container mx-auto flex-1 py-10  flex flex-col items-center relative">
           {children}
         </div>
 

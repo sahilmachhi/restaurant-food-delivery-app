@@ -1,7 +1,9 @@
 import mongoose, { Schema, Types } from "mongoose";
+import { Restaurant } from "./restaurant.model";
 
 interface CartItem {
   productId: Types.ObjectId;
+  restaurantId: Types.ObjectId;
   quantity: number;
 }
 
@@ -10,10 +12,15 @@ interface ICart extends Document {
   items: CartItem[];
 }
 
-const CartItemSchema = new Schema<CartItem>({
+export const CartItemSchema = new Schema<CartItem>({
   productId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Menu",
+    required: true,
+  },
+  restaurantId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Restaurant",
     required: true,
   },
   quantity: { type: Number, required: true, default: 1 },
