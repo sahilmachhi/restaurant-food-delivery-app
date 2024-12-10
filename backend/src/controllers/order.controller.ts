@@ -1,15 +1,63 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import { Restaurant } from "../models/restaurant.model";
 import { userRequest } from "./user.controller";
 import { Order } from "../models/order.model";
 import { Cart } from "../models/cart.model";
 
-export const getOrders = async (req: userRequest, res: Response) => {
+export const getOrdersByRestaurant = async (req: any, res: Response) => {
+  try {
+    // Extract the restaurant ID from the request (e.g., from params or query)
+    const { restaurantId } = req.params;
+
+    // Verify the user is the owner of the restaurant
+    const userId = req.user._id; // Assuming `req.user` has the authenticated user details
+    const restaurant = await Restaurant.findOne({
+      _id: restaurantId,
+      owner: userId, // Assuming `owner` field in Restaurant points to User ID
+    });
+
+    if (!restaurant) {
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized to access this restaurant's orders.",
+      });
+    }
+
+    // Fetch orders related to the restaurant
+    const orders = await Order.find({ "cartItems.restaurantId": restaurantId })
+      .populate("user", "fullname email") // Populate user details
+      .populate("cartItems.productId", "name price") // Populate product details
+      .exec();
+
+    if (!orders.length) {
+      return res.status(404).json({
+        success: false,
+        message: "No orders found for this restaurant.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      orders,
+    });
+  } catch (error) {
+    console.error("Error fetching orders by restaurant:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error. Please try again later.",
+    });
+  }
+};
+
+export const getOrdersByUser = async (req: userRequest, res: Response) => {
   try {
     const userId = req.user._id;
-    const orders = Order.find({ user: userId })
+    console.log(userId);
+    const orders = await Order.find({ user: userId.toString() })
       .populate("user")
       .populate("restuarant");
+
+    console.log(orders);
 
     if (!orders) {
       return res.status(401).json({

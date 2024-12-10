@@ -17,10 +17,11 @@ import {
   incrementQty,
   removeItem,
 } from "@/utils/cartApi";
-import { Heading1, Minus, Plus } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 import { Address } from "@/utils/constants";
 import axios from "axios";
 import AddressCard from "./AddressCard";
+import { requestOrder } from "@/utils/orderApi";
 
 const Cart = () => {
   const [cart, setCart] = useState([]);
@@ -28,6 +29,7 @@ const Cart = () => {
   const [error, setError] = useState(null);
   const [totalPrice, setTotalPrice] = useState(0);
   const [open, setOpen] = useState(false);
+  const [orderLoading, setOrderLoading] = useState(false);
 
   const [addresses, setAddresses] = useState<Address[]>([]);
 
@@ -47,11 +49,22 @@ const Cart = () => {
   };
 
   const orderNow = async (address: any) => {
+    setOrderLoading(true);
     const orderDetails = {
       address,
-      cart,
-      totalPrice,
+      cartItems: cart,
+      totalAmount: totalPrice,
     };
+
+    const { order, error } = await requestOrder(orderDetails);
+
+    if (!order) {
+      console.log(error);
+      setOrderLoading(false);
+    } else {
+      console.log(order);
+      setOrderLoading(false);
+    }
   };
 
   const fetchCart = async () => {
@@ -215,7 +228,6 @@ const Cart = () => {
                       </Button>
                     ) : (
                       <Button
-                        // onClick={() => decrementQuantity(item._id)}
                         size={"icon"}
                         variant={"ghost"}
                         className="rounded-full bg-gray-200"
