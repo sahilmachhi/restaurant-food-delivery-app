@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { AspectRatio } from "./ui/aspect-ratio";
 import { Banknote, Clock, Dot } from "lucide-react";
 import Link from "next/link";
@@ -26,6 +27,7 @@ const SearchResultCard = ({ restaurant }: { restaurant: any }) => {
         <img
           src={restaurant.imageUrl}
           className="rounded-md w-full h-full object-cover"
+          alt="restaurant image"
         />
       </AspectRatio>
       <div>

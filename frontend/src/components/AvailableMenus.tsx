@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { addToCart } from "@/utils/cartApi";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardFooter } from "./ui/card";
@@ -34,7 +35,7 @@ const AvailableMenus = ({ menus }: { menus: any }) => {
             >
               <img
                 src={menu.imageUrl}
-                alt=""
+                alt="menu image"
                 className="w-full h-40 object-cover"
               />
               <CardContent className="p-4">

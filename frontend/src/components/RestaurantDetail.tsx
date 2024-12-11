@@ -1,5 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
-
 import { getSingleRestaurant } from "@/utils/restaurnatApi";
 import { Badge, Timer } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -9,6 +9,7 @@ const RestaurantDetail = ({ restaurantId }: { restaurantId: string }) => {
   const [isLoading, setLoading] = useState(false);
   const [restaurant, setRestaurant] = useState<any>({});
   const [isError, setError] = useState<any>(null);
+
   const fetchData = async () => {
     setLoading(true);
     const { restaurantData, error } = await getSingleRestaurant(restaurantId);
@@ -21,9 +22,10 @@ const RestaurantDetail = ({ restaurantId }: { restaurantId: string }) => {
     }
     setLoading(false);
   };
+
   useEffect(() => {
     fetchData();
-  }, [RestaurantDetail]);
+  }, []);
   return (
     <>
       <div className="max-w-6xl mx-auto my-10">

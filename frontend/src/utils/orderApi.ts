@@ -24,7 +24,10 @@ export const getOrderFromUser = async () => {
         withCredentials: true,
       }
     );
-    return { order: response };
+    return {
+      items: response.data.orders,
+      details: response.data.orders,
+    };
   } catch (error: any) {
     console.error("Error :", error);
     return { error: error?.message || "An error occurred" }; // Return an object with error
@@ -40,7 +43,7 @@ export const getOrderFromRestaurant = async (restaurantId: string) => {
         withCredentials: true,
       }
     );
-    return { order: response };
+    return { order: response.data.orders };
   } catch (error: any) {
     console.error("Error :", error);
     return { error: error?.message || "An error occurred" }; // Return an object with error

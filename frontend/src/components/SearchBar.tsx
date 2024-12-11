@@ -32,7 +32,7 @@ const SearchBar = ({ onSubmit, onReset, placeHolder, searchQuery }: Props) => {
 
   useEffect(() => {
     form.reset({ searchQuery });
-  }, [form, searchQuery]);
+  }, []);
 
   const handleReset = () => {
     form.reset({

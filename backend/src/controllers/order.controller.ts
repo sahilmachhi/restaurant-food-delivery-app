@@ -51,13 +51,13 @@ export const getOrdersByRestaurant = async (req: any, res: Response) => {
 
 export const getOrdersByUser = async (req: userRequest, res: Response) => {
   try {
-    const userId = req.user._id;
-    console.log(userId);
-    const orders = await Order.find({ user: userId.toString() })
-      .populate("user")
-      .populate("restuarant");
-
-    console.log(orders);
+    const userId = req.user._id.toString();
+    const orders = await Order.find({
+      user: userId,
+    })
+      .populate({ path: "user", model: "User" })
+      .populate({ path: "cartItems.restaurantId", model: "Restaurant" })
+      .populate({ path: "cartItems.productId", model: "Menu" });
 
     if (!orders) {
       return res.status(401).json({

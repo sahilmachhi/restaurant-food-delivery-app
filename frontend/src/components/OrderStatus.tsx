@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import OrderStatusDetail from "@/components/OrderStatusDetail";
 import OrderStatusHeader from "@/components/OrderStatusHeader";
@@ -6,17 +7,19 @@ import { getOrderFromUser } from "@/utils/orderApi";
 import React, { useEffect, useState } from "react";
 
 const OrderStatus = () => {
-  const [orders, setOrders] = useState([]);
+  const [items, setItems] = useState([]);
+
   const [loading, setLoading] = useState(false);
 
   const fetchOrders = async () => {
-    const { order, error } = await getOrderFromUser();
+    const { details, items, error } = await getOrderFromUser();
 
-    if (!order) {
+    console.log(items);
+
+    if (!items) {
       console.log(error);
     } else {
-      console.log(order);
-      //   setOrders(order);
+      setItems(items);
     }
   };
 
@@ -25,16 +28,17 @@ const OrderStatus = () => {
   }, []);
   return (
     <>
-      {orders.map((order, i) => (
+      {items.map((item: any, i) => (
         <div className="space-y-10 bg-gray-50 p-10 rounded-lg" key={i}>
-          <OrderStatusHeader order={order} />
+          <OrderStatusHeader item={item} />
           <div className="grid gap-10 md:grid-cols-2">
-            <OrderStatusDetail order={order} />
+            <OrderStatusDetail item={item} />
             <AspectRatio ratio={16 / 5}>
-              {/* <img
-                 src={order.restaurant.imageUrl}
+              <img
+                src={item.cartItems[0].restaurantId.imageUrl}
+                alt="restaurant image"
                 className="rounded-md object-cover h-full w-full"
-              /> */}
+              />
             </AspectRatio>
           </div>
         </div>
