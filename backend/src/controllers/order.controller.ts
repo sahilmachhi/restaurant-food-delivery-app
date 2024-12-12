@@ -206,3 +206,37 @@ export const createOrder = async (req: any, res: Response) => {
     });
   }
 };
+
+export const changeOrderStatus = async (req: any, res: Response) => {
+  try {
+    const { orderId } = req.params;
+    const { status } = req.body;
+
+    console.log(status);
+
+    // const userId = req.user._id;
+
+    const order = await Order.findByIdAndUpdate(
+      orderId,
+      { status },
+      { new: true, runValidators: true }
+    );
+
+    if (!order) {
+      return res.status(402).json({
+        success: false,
+        message: "order update failed",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      order,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "server error",
+    });
+  }
+};

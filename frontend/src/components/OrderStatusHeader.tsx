@@ -1,17 +1,7 @@
 import { Progress } from "./ui/progress";
+import { ORDER_STATUS } from "@/utils/orderApi";
 
 const OrderStatusHeader = ({ item }: { item: any }) => {
-  const ORDER_STATUS = [
-    { label: "pending", value: "pending", progressValue: 10 },
-    {
-      label: "Awaiting Restaurant Confirmation",
-      value: "paid",
-      progressValue: 25,
-    },
-    { label: "In Progress", value: "inProgress", progressValue: 50 },
-    { label: "Out for Delivery", value: "outForDelivery", progressValue: 75 },
-    { label: "Delivered", value: "delivered", progressValue: 100 },
-  ];
   const getExpectedDelivery = () => {
     const created = new Date(item.createdAt);
 

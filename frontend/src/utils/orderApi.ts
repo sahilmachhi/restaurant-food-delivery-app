@@ -49,3 +49,39 @@ export const getOrderFromRestaurant = async (restaurantId: string) => {
     return { error: error?.message || "An error occurred" }; // Return an object with error
   }
 };
+
+export const updateOrderStatus = async (
+  orderId: string,
+  orderStatus: string
+) => {
+  try {
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/order/update_oder_status/${orderId}`,
+      {
+        status: orderStatus,
+      },
+      {
+        withCredentials: true,
+      }
+    );
+    return { status: response.data };
+  } catch (error: any) {
+    return { error: error?.message || "An error occurred" };
+  }
+};
+
+export const ORDER_STATUS = [
+  { label: "Payment pending", value: "pending", progressValue: 10 },
+  {
+    label: "Payment completed awaiting restaurant to confirm order",
+    value: "confirmed",
+    progressValue: 25,
+  },
+  {
+    label: "Restaurant is Preparing your order",
+    value: "preparing",
+    progressValue: 50,
+  },
+  { label: "Out for Delivery", value: "outForDelivery", progressValue: 75 },
+  { label: "Delivered", value: "delivered", progressValue: 100 },
+];

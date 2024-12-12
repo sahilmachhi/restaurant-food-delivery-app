@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { verifyJWT } from "../middleware/UserInstance.middleware";
 import {
+  changeOrderStatus,
   createOrder,
   getOrdersByRestaurant,
   getOrdersByUser,
@@ -18,3 +19,5 @@ orderRoutes.get(
   verifyJWT,
   getOrdersByRestaurant
 );
+
+orderRoutes.post("/update_oder_status/:orderId", changeOrderStatus);

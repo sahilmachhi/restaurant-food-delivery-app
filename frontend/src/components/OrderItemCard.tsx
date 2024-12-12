@@ -9,21 +9,23 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Label } from "./ui/label";
+import { Badge } from "./ui/badge";
+import { ORDER_STATUS, updateOrderStatus } from "@/utils/orderApi";
 
 const OrderItemCard = ({ order }: { order: any }) => {
-  //   const { updateRestaurantStatus, isLoading } = useUpdateMyRestaurantOrder();
   const [status, setStatus] = useState(order.status);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setStatus(order.status);
   }, [order.status]);
 
   const handleStatusChange = async (newStatus: any) => {
-    // await updateRestaurantStatus({
-    //   orderId: order._id as string,
-    //   status: newStatus,
-    // });
-    // setStatus(newStatus);
+    setLoading(true);
+    const { status } = await updateOrderStatus(order._id, newStatus);
+    console.log(status);
+    setStatus(newStatus);
+    setLoading(false);
   };
 
   const getTime = () => {
@@ -43,14 +45,12 @@ const OrderItemCard = ({ order }: { order: any }) => {
         <CardTitle className="grid md:grid-cols-4 gap-4 justify-between mb-3">
           <div>
             Customer Name:
-            <span className="ml-2 font-normal">
-              {order.deliveryDetails.name}
-            </span>
+            <span className="ml-2 font-normal">{order.user.fullname}</span>
           </div>
           <div>
             Delivery address:
             <span className="ml-2 font-normal">
-              {order.deliveryDetails.addressLine1}, {order.deliveryDetails.city}
+              {order.address.address.addressLine1}, {order.address.address.city}
             </span>
           </div>
           <div>
@@ -68,29 +68,31 @@ const OrderItemCard = ({ order }: { order: any }) => {
       </CardHeader>
       <CardContent className="flex flex-col gap-6">
         <div className="flex flex-col gap-2">
-          {/* {order.cartItems.map((cartItem) => (
-            <span>
+          {order.cartItems.map((cartItem: any, i: string) => (
+            <span key={i}>
               <Badge variant="outline" className="mr-2">
                 {cartItem.quantity}
               </Badge>
-              {cartItem.name}
+              {cartItem.productId.name}
             </span>
-          ))} */}
+          ))}
         </div>
         <div className="flex flex-col space-y-1.5">
           <Label htmlFor="status">What is the status of this order?</Label>
           <Select
             value={status}
-            // disabled={isLoading}
-            // onValueChange={(value) => handleStatusChange(value as OrderStatus)}
+            disabled={loading}
+            onValueChange={(value) => handleStatusChange(value)}
           >
             <SelectTrigger id="status">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent position="popper">
-              {/* {ORDER_STATUS.map((status) => (
-                <SelectItem value={status.value}>{status.label}</SelectItem>
-              ))} */}
+              {ORDER_STATUS.map((status) => (
+                <SelectItem key={status.value} value={status.value}>
+                  {status.label}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
