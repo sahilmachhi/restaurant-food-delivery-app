@@ -10,8 +10,8 @@ import { orderRoutes } from "./Routes/order.routes";
 import { cartRoutes } from "./Routes/cart.routes";
 
 const options = {
-  httpOnly: true,
-  secure: true,
+  httpOnly: false,
+  secure: false,
 };
 
 connectDB();
