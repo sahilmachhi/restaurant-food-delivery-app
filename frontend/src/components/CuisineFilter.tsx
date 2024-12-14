@@ -144,7 +144,6 @@ const CuisineFilter = ({
             );
           })}
         <Button onClick={onExpandedClick} variant="link" className="p-0 m-0">
-          {/* <div className="-mt-10"> */}
           {isExpanded ? (
             <span className="flex flex-row items-center">
               View Less <ChevronUp />
@@ -154,7 +153,6 @@ const CuisineFilter = ({
               View More <ChevronDown />
             </span>
           )}
-          {/* </div> */}
         </Button>
       </div>
     </>

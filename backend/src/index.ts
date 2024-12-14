@@ -48,6 +48,7 @@ app.use("/api/menu", menuRoutes);
 app.use("/api/order", orderRoutes);
 app.use("/api/cart", cartRoutes);
 
-app.listen(5000, () => {
-  console.log("app is running on port 5000");
+const port = process.env.PORT || 5000;
+app.listen(port, () => {
+  console.log(`app is running on port ${port}`);
 });
