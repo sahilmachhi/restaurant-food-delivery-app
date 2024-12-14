@@ -134,6 +134,7 @@ export const loginUser = async (req: Request, res: Response) => {
     expiryDate.setDate(expiryDate.getDate() + 15);
 
     const options = {
+      sameSite: "none" as const,
       httpOnly: false,
       secure: false,
       expires: expiryDate,
