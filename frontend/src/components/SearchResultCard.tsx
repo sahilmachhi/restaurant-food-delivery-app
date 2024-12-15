@@ -69,7 +69,7 @@ const SearchResultCard = ({ restaurant }: { restaurant: any }) => {
           </div>
         </CardContent>
         <CardFooter className="p-4 border-t dark:border-t-gray-700 border-t-gray-100 text-white flex justify-end">
-          <Link href={`/restaurant/${restaurant._id}`}>
+          <Link href={`/${restaurant._id}`}>
             <Button className="bg-orange-400 hover:bg-orange-700 font-semibold py-2 px-4 rounded-full shadow-md transition-colors duration-200">
               View Menus
             </Button>
