@@ -27,12 +27,9 @@ const AvailableMenus = ({ menus }: { menus: any }) => {
         <h1 className="text-xl md:text-2xl font-extrabold mb-6">
           Available Menus
         </h1>
-        <div className="grid md:grid-cols-3 space-y-4 md:space-y-0">
+        <div className="grid items-stretch lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-8">
           {menus.map((menu: any, index: number) => (
-            <Card
-              className="max-w-xs mx-auto shadow-lg rounded-lg overflow-hidden"
-              key={index}
-            >
+            <Card className="shadow-lg rounded-lg overflow-hidden" key={index}>
               <img
                 src={menu.imageUrl}
                 alt="menu image"

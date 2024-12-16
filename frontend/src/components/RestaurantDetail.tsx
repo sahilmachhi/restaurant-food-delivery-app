@@ -28,21 +28,23 @@ const RestaurantDetail = ({ restaurantId }: { restaurantId: string }) => {
   }, []);
   return (
     <>
-      <div className="max-w-6xl mx-auto my-10">
-        <div className="w-full">
-          <div className="relative w-full h-32 md:h-64 lg:h-72">
-            <img
-              src={restaurant?.imageUrl || "Loading..."}
-              alt="res_image"
-              className="object-cover w-full h-full rounded-lg shadow-lg"
-            />
+      <div className="w-full mx-auto lg:px-36 px-2 md:px-16">
+        <div className="w-full flex justify-center flex-col">
+          <div className="flex items-center justify-center">
+            <div className="relative w-[490px]">
+              <img
+                src={restaurant?.imageUrl || "Loading..."}
+                alt="res_image"
+                className="object-cover  h-full w-full rounded-lg shadow-lg"
+              />
+            </div>
           </div>
-          <div className="flex flex-col md:flex-row justify-between">
+          <div className="flex flex-col self-start">
             <div className="my-5">
               <h1 className="font-medium text-xl">
                 {restaurant?.restaurantName || "Loading..."}
               </h1>
-              <div className="flex gap-2 my-2">
+              <div className="flex gap-2 my-2 w-full">
                 {restaurant?.cuisines
                   ? restaurant?.cuisines.map(
                       (cuisine: string, index: number) => {
