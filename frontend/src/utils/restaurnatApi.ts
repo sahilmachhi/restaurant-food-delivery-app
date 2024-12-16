@@ -63,9 +63,7 @@ export const searchRestaurant = (searchState: searchState) => {
     params.set("searchQuery", searchState.searchQuery);
     params.set("selectedCuisines", searchState.selectedCuisines.join(","));
     // params.set("page", searchState.page.toString());
-    // params.set("sortOption", searchState.sortOption);
-
-    console.log(params.toString());
+    // params.set("sortOption", searchState.sortOption)
   } catch (error) {
     return { error };
   }
