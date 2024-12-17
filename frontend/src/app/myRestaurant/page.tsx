@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 
 const Page = async () => {
   try {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const accessToken = cookieStore.get("accessToken");
 
     if (!accessToken) {
