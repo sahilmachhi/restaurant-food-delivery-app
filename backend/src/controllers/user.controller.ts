@@ -3,6 +3,7 @@ import { User } from "../models/user.model";
 import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import { Document } from "mongoose";
+import { CookiesOptions } from "../utils/utils";
 
 export interface userRequest extends Request {
   user?: any;
@@ -130,20 +131,11 @@ export const loginUser = async (req: Request, res: Response) => {
 
     await user.save();
 
-    const expiryDate = new Date();
-    expiryDate.setDate(expiryDate.getDate() + 15);
-
-    const options = {
-      sameSite: "none" as const,
-      httpOnly: false,
-      secure: true,
-      expires: expiryDate,
-    };
     console.log(accessToken);
     console.log(refreshToken);
     return res
-      .cookie("accessToken", accessToken, options)
-      .cookie("refreshToken", refreshToken, options)
+      .cookie("accessToken", accessToken, CookiesOptions)
+      .cookie("refreshToken", refreshToken, CookiesOptions)
       .status(200)
       .json({
         success: true,

@@ -57,13 +57,19 @@ export const getAllRestaurants = async () => {
   }
 };
 
-export const searchRestaurant = (searchState: searchState) => {
+export const searchRestaurant = async (searchState: searchState) => {
   try {
     const params = new URLSearchParams();
-    params.set("searchQuery", searchState.searchQuery);
+    params.set("search_query", searchState.searchQuery);
     params.set("selectedCuisines", searchState.selectedCuisines.join(","));
-    // params.set("page", searchState.page.toString());
-    // params.set("sortOption", searchState.sortOption)
+
+    const fetchUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/restaurant/search_restaurants/${params}`;
+
+    const data = await axios.get(fetchUrl);
+
+    console.log(fetchUrl);
+
+    console.log(data);
   } catch (error) {
     return { error };
   }

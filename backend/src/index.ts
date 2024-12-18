@@ -8,11 +8,12 @@ import { restaurantRoutes } from "./Routes/restaurant.routes";
 import { menuRoutes } from "./Routes/menu.routes";
 import { orderRoutes } from "./Routes/order.routes";
 import { cartRoutes } from "./Routes/cart.routes";
+import { CookiesOptions } from "./utils/utils";
 
-const options = {
-  httpOnly: false,
-  secure: false,
-};
+// const options = {
+//   httpOnly: false,
+//   secure: false,
+// };
 
 connectDB();
 
@@ -38,7 +39,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.use(cookieParser());
 app.get("/", async (req: Request, res: Response) => {
   res
-    .cookie("hello", "lol", options)
+    .cookie("hello", "lol", CookiesOptions)
     .json({ message: "hello from restaurant server" });
 });
 
