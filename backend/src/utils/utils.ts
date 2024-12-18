@@ -9,6 +9,6 @@ export const CookiesOptions: CookieOptions = {
   //   secure: true,
   secure: process.env.SECURE === "true",
   expires: expiryDate,
-  domain: process.env.FRONTEND_URI || "*",
+  domain: process.env.COOKIE_DOMAIN || "*",
   path: "/",
 };
