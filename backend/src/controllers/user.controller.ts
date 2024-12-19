@@ -135,7 +135,7 @@ export const loginUser = async (req: Request, res: Response) => {
     console.log(refreshToken);
     return (
       res
-        .set("Set-Cookie", `accessToken=${accessToken}`)
+        .set("Set-Cookie", `accessToken=${accessToken}; Path=/`)
         // .cookie("accessToken", accessToken, CookiesOptions)
         // .cookie("refreshToken", refreshToken, CookiesOptions)
         .status(200)
