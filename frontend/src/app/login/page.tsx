@@ -6,10 +6,13 @@ import { PostRequest } from "@/utils/tanstackApiHandler";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { login, setUser } from "@/store/userSlice";
+import { loginAPI } from "@/utils/userAuthApi";
+// import { isPending } from "@reduxjs/toolkit";
 
 const Login = (): React.JSX.Element => {
   const dispatch = useDispatch();
   const Router = useRouter();
+  const [loading, setLoading] = useState(false);
   const loginData = {
     email: "",
     password: "",
@@ -24,18 +27,31 @@ const Login = (): React.JSX.Element => {
   }
 
   const url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/login`;
-  const { mutateAsync, isPending, data } = PostRequest(url, ["user"]);
-  const userData = data?.data.data;
+  // const { mutateAsync, isPending, data } = PostRequest(url, ["user"]);
+
+  // const userData = data?.data.data;
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    setLoading(true);
     event.preventDefault();
     const formData: any = new FormData(event.currentTarget);
-    mutateAsync(formData, {
-      onSuccess: () => {
-        dispatch(setUser(userData));
-        dispatch(login());
-        Router.push(`/`);
-      },
-    });
+    const { data, error } = await loginAPI(formData);
+    if (!data) {
+      console.log(error);
+      setLoading(false);
+    } else {
+      console.log(data);
+      dispatch(setUser(data));
+      dispatch(login());
+      Router.push(`/`);
+      setLoading(false);
+    }
+    // mutateAsync(formData, {
+    //   onSuccess: () => {
+    //     dispatch(setUser(userData));
+    //     dispatch(login());
+    //     Router.push(`/`);
+    //   },
+    // });
   };
 
   return (
@@ -118,7 +134,7 @@ const Login = (): React.JSX.Element => {
                 type="submit"
                 className="w-full text-black bg-orange-300 hover:bg-orange-500 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
               >
-                {isPending ? `loading` : `login`}
+                {loading ? `loading` : `login`}
               </button>
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                 Don’t have an account yet?{" "}
