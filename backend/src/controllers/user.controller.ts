@@ -137,7 +137,9 @@ export const loginUser = async (req: Request, res: Response) => {
       res
         .set(
           "Set-Cookie",
-          `accessToken=${accessToken}; Path=/; SameSite=None; Secure`
+          `accessToken=${accessToken}; Path=/; SameSite=None; Secure;Max-Age=${
+            3 * 24 * 60 * 60
+          }`
         )
         // .cookie("accessToken", accessToken, CookiesOptions)
         // .cookie("refreshToken", refreshToken, CookiesOptions)
