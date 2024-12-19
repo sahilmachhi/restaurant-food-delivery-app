@@ -133,15 +133,18 @@ export const loginUser = async (req: Request, res: Response) => {
 
     console.log(accessToken);
     console.log(refreshToken);
-    return res
-      .cookie("accessToken", accessToken, CookiesOptions)
-      .cookie("refreshToken", refreshToken, CookiesOptions)
-      .status(200)
-      .json({
-        success: true,
-        message: `user logged in successfully`,
-        data: user,
-      });
+    return (
+      res
+        .set("Set-Cookie", `accessToken=${accessToken}`)
+        // .cookie("accessToken", accessToken, CookiesOptions)
+        // .cookie("refreshToken", refreshToken, CookiesOptions)
+        .status(200)
+        .json({
+          success: true,
+          message: `user logged in successfully`,
+          data: user,
+        })
+    );
   } catch (error) {
     return res.status(500).json({
       success: false,
