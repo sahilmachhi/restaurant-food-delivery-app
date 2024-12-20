@@ -135,11 +135,11 @@ export const loginUser = async (req: Request, res: Response) => {
     console.log(refreshToken);
     return (
       res
-        .set(
+        .setHeader(
           "Set-Cookie",
           `accessToken=${accessToken}; Path=/; SameSite=None; Secure;Max-Age=${
             3 * 24 * 60 * 60
-          }`
+          };HttpOnly; Domain=.netlify.app`
         )
         // .cookie("accessToken", accessToken, CookiesOptions)
         // .cookie("refreshToken", refreshToken, CookiesOptions)

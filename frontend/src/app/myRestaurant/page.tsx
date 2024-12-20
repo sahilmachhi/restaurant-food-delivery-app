@@ -10,6 +10,7 @@ const Page = async () => {
     if (!accessToken) {
       throw new Error("Access token not found");
     }
+    console.log(accessToken);
 
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_SERVER_URL}/api/restaurant/get_owner_restaurant`,
@@ -21,6 +22,7 @@ const Page = async () => {
       }
     );
 
+    console.log(response.data.restaurant);
     const restaurants = response.data.restaurant || [];
 
     return (
