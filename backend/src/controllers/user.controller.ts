@@ -135,12 +135,12 @@ export const loginUser = async (req: Request, res: Response) => {
     console.log(refreshToken);
     return (
       res
-        // .setHeader(
-        //   "Set-Cookie",
-        //   `accessToken=${accessToken}; Path=/; SameSite=None; Secure;Max-Age=${
-        //     3 * 24 * 60 * 60
-        //   };HttpOnly;`
-        // )
+        .setHeader(
+          "Set-Cookie",
+          `accessToken=${accessToken}; Path=/; SameSite=None; Secure;Max-Age=${
+            3 * 24 * 60 * 60
+          };HttpOnly;`
+        )
         // .cookie("accessToken", accessToken, CookiesOptions)
         // .cookie("refreshToken", refreshToken, CookiesOptions)
         .status(200)
