@@ -15,12 +15,13 @@ export async function middleware(request: NextRequest) {
         headers: {
           "Content-Type": "application/json",
           Cookie: `accessToken=${accessToken.value}`,
+          
         },
       }
     );
     // console.log("user is found from middlware", response.data);
-  } catch (error) {
-    console.log(error);
+  } catch (error:any) {
+    console.log(error.message);
   }
   return console.log(accessToken);
   // return NextResponse.redirect(new URL("/home", request.url));
