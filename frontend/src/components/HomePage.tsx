@@ -11,7 +11,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 
 export type searchState = {
-  searchQuery: string;
+  searchText: string;
   page: number;
   selectedCuisines: string[];
   sortOption: string;
@@ -22,7 +22,7 @@ const HomePage = () => {
   const [restaurants, setRestaurants] = useState([]);
   const [isError, setError] = useState<undefined | any>(undefined);
   const [searchState, setSearchState] = useState<searchState>({
-    searchQuery: "",
+    searchText: "",
     page: 1,
     selectedCuisines: [],
     sortOption: "bestMatch",
@@ -55,19 +55,29 @@ const HomePage = () => {
   const setSearchQuery = (searchQuery: any) => {
     setSearchState((prevState) => ({
       ...prevState,
-      searchQuery: searchQuery.searchQuery,
+      searchText: searchQuery.searchQuery,
       page: 1,
     }));
   };
 
+  const getSearchedRestaurants = async () => {
+    setloading(true)
+    const { restaurants, error } = await searchRestaurant(searchState)
+    if (!restaurants) {
+      console.log(error)
+    }
+    setRestaurants(restaurants)
+    setloading(false)
+    return
+  }
   useEffect(() => {
-    searchRestaurant(searchState);
+    getSearchedRestaurants()
   }, [searchState]);
 
   const resetSearch = () => {
     setSearchState((prevState) => ({
       ...prevState,
-      searchQuery: "",
+      searchText: "",
       page: 1,
     }));
   };
@@ -78,7 +88,7 @@ const HomePage = () => {
     const { restaurants, error } = await getAllRestaurants();
     if (restaurants) {
       setRestaurants(restaurants);
-      console.log(restaurants);
+      console.log("restaurant is set")
     }
 
     if (error) {
@@ -91,13 +101,13 @@ const HomePage = () => {
     getRestaurants();
   }, []);
 
-  if (isLoading) {
-    return (
-      <>
-        <span>loading</span>
-      </>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <>
+  //       <span>loading</span>
+  //     </>
+  //   );
+  // }
 
   if (isError) {
     return (
@@ -107,13 +117,13 @@ const HomePage = () => {
     );
   }
 
-  if (restaurants.length < 1) {
-    return (
-      <>
-        <h1>no restaurants found</h1>
-      </>
-    );
-  }
+  // if (restaurants.length < 1) {
+  //   return (
+  //     <>
+  //       <h1>no restaurants found</h1>
+  //     </>
+  //   );
+  // }
 
   // return (
   //   <div className="max-w-7xl mx-auto my-10">
@@ -238,7 +248,7 @@ const HomePage = () => {
         </div>
         <div id="main-content" className="flex flex-col w-full gap-5">
           <SearchBar
-            searchQuery={searchState.searchQuery}
+            searchQuery={searchState.searchText}
             onSubmit={setSearchQuery}
             placeHolder="Search by Cuisine or Restaurant Name"
             onReset={resetSearch}
@@ -252,9 +262,13 @@ const HomePage = () => {
           </div>
 
           <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
-            {restaurants.map((restaurant, index) => (
-              <SearchResultCard restaurant={restaurant} key={index} />
-            ))}
+            {isLoading ? <h1>loading restaurants</h1> :
+              restaurants.length < 1 ? <h1>
+                no restaurant found
+              </h1> :
+                restaurants.map((restaurant, index) => (
+                  <SearchResultCard restaurant={restaurant} key={index} />
+                ))}
           </div>
           {/*
           <PaginationSelector

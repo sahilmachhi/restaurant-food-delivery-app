@@ -230,11 +230,10 @@ export const updateRestaurantOrder = async (req: any, res: Response) => {
 
 export const searchRestaurant = async (req: any, res: Response) => {
   try {
-    const searchText: string = req.params.search_text || "";
-    const searchQuery: string = req.params.search_query || "";
-    console.log(`searchtext: ${searchText}`);
-    console.log(`searchQuery: ${searchQuery}`);
-    // this code should be reviewed
+    // console.log(req.query.search_query);
+    const searchText: string = req.query.search_text || "";
+    // const searchQuery: string = req.query.search_text || "";
+    console.log(searchText)
     const selectedCuisines = ((req.query.selected_cuisines as string) || "")
       .split(",")
       .filter((cuisine) => cuisine);
@@ -244,27 +243,36 @@ export const searchRestaurant = async (req: any, res: Response) => {
     if (searchText) {
       Query.$or = [
         {
-          restaurantName: { $regex: searchText, $options: "i" },
-          city: { $regix: searchText, $options: "i" },
-          country: { $regix: searchText, $options: "i" },
+          restaurantName: { $regex: searchText, $options: "i" }
+        },
+        {
+          city: { $regex: searchText, $options: "i" }
+        },
+        {
+          country: { $regex: searchText, $options: "i" }
         },
       ];
     }
 
-    if (searchQuery) {
-      Query.$or = [
-        {
-          restaurantName: { $regex: searchText, $options: "i" },
-          cuisines: { $regix: searchQuery, $options: "i" },
-        },
-      ];
-    }
+    console.log(Query)
+    // if (searchQuery) {
+    //   Query.$or = [
+    //     {
+    //       restaurantName: { $regex: searchText, $options: "i" }
+    //     },
+    //     {
+    //       cuisines: { $regex: searchQuery, $options: "i" },
+    //     }
+    //   ];
+    // }
 
     if (selectedCuisines.length > 0) {
       Query.cuisines = { $in: selectedCuisines };
     }
 
+
     const restuarants = await Restaurant.find(Query);
+    console.log(restuarants)
 
     if (!restuarants) {
       return res.status(401).json({
@@ -275,7 +283,7 @@ export const searchRestaurant = async (req: any, res: Response) => {
 
     return res.status(200).json({
       success: true,
-      restuarants,
+      restaurant: restuarants,
     });
   } catch (error) {
     return res.status(500).json({

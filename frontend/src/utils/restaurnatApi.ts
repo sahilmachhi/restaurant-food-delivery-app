@@ -60,16 +60,16 @@ export const getAllRestaurants = async () => {
 export const searchRestaurant = async (searchState: searchState) => {
   try {
     const params = new URLSearchParams();
-    params.set("search_query", searchState.searchQuery);
-    params.set("selectedCuisines", searchState.selectedCuisines.join(","));
+    params.set("search_text", searchState.searchText);
+    params.set("selected_cuisines", searchState.selectedCuisines.join(","));
 
-    const fetchUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/restaurant/search_restaurants/${params}`;
+    const fetchUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/restaurant/search_restaurants?${params}`;
 
     const data = await axios.get(fetchUrl);
 
     console.log(fetchUrl);
 
-    console.log(data);
+    return { restaurants: data.data.restaurant }
   } catch (error) {
     return { error };
   }

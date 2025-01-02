@@ -44,7 +44,7 @@ restaurantRoutes.put("/update_order", verifyJWT, updateRestaurantOrder);
 // public route
 
 restaurantRoutes.get(
-  "/search_restaurants/:search_text/:search_query",
+  "/search_restaurants",
   searchRestaurant
 );
 
