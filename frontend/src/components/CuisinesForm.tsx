@@ -1,51 +1,85 @@
 import { cuisineList } from "@/utils/constants";
-
 import { Controller } from "react-hook-form";
+import { Checkbox } from "./ui/checkbox";
+import { Label } from "./ui/label";
+import { motion } from "framer-motion";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      duration: 0.6,
+      staggerChildren: 0.1,
+      ease: [0.22, 1, 0.36, 1] as any,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, x: -10 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] as any },
+  },
+};
+
+const checkboxVariants = {
+  hover: {
+    scale: 1.05,
+    transition: { duration: 0.15, ease: [0.22, 1, 0.36, 1] as any},
+  },
+};
 
 const CuisinesForm = ({ control }: { control: any }) => {
-  // const [selectedCuisines, setCuisines] = useState<string[]>(
-  //   restaurantData?.cuisines || []
-  // );
-
-  // const handleCheckboxChange = (value: string) => {
-  //   setCuisines((prevValues) =>
-  //     prevValues.includes(value)
-  //       ? prevValues.filter((item) => item !== value)
-  //       : [...prevValues, value]
-  //   );
-  // };
-
   return (
-    <div className="flex flex-col gap-2 items-baseline justify-center w-[680px]">
-      <label>Please select</label>
-      {cuisineList.map((cuisine, index) => (
-        <div className="flex items-center justify-center gap-2" key={index}>
-          <Controller
-            name="cuisines"
-            control={control}
-            render={({ field }) => (
-              <input
-                type="checkbox"
-                id={cuisine}
-                value={cuisine}
-                checked={field?.value?.includes(cuisine)}
-                onChange={(e) => {
-                  const checked = e.target.checked;
-                  if (checked) {
-                    field.onChange([...field.value, cuisine]);
-                  } else {
-                    field.onChange(
-                      field.value.filter((value: string) => value !== cuisine)
-                    );
-                  }
-                }}
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="space-y-2"
+    >
+      <Label className="text-sm font-medium text-foreground">
+        Select Cuisines
+      </Label>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-48 overflow-y-auto pr-2">
+        {cuisineList.map((cuisine, index) => (
+          <motion.div
+            key={cuisine}
+            variants={itemVariants}
+            whileHover="hover"
+            className="flex items-center space-x-3 p-2 rounded-md hover:bg-accent cursor-pointer"
+          >
+            <motion.div variants={checkboxVariants}>
+              <Controller
+                name="cuisines"
+                control={control}
+                render={({ field }) => (
+                  <Checkbox
+                    id={cuisine}
+                    value={cuisine}
+                    checked={field.value?.includes(cuisine)}
+                    onCheckedChange={(checked) => {
+                      const newValue = checked
+                        ? [...(field.value || []), cuisine]
+                        : field.value?.filter((value: string) => value !== cuisine) || [];
+                      field.onChange(newValue);
+                    }}
+                  />
+                )}
               />
-            )}
-          />
-          <label htmlFor={cuisine}>{cuisine}</label>
-        </div>
-      ))}
-    </div>
+            </motion.div>
+            <Label
+              htmlFor={cuisine}
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer flex-1"
+            >
+              {cuisine}
+            </Label>
+          </motion.div>
+        ))}
+      </div>
+    </motion.div>
   );
 };
 

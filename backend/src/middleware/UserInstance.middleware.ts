@@ -12,29 +12,31 @@ export const verifyJWT = async (
   next: NextFunction
 ) => {
   try {
-    debugger;
-    const token = req.cookies.accessToken;
 
-    if (!token) {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).json({
         success: false,
         message: "error accessToken not found",
       });
     }
 
-    const CookieData: any = jwt.verify(
+    const token = authHeader.split(" ")[1];
+
+    const decoded: any = jwt.verify(
       token,
       process.env.ACCESS_TOKEN_SECRET || "secret"
     );
 
-    if (!CookieData) {
+    if (!decoded) {
       return res.status(400).json({
         success: false,
         message: "error getting data from Cookies",
       });
     }
 
-    const user = await User.findById(CookieData.id);
+    const user = await User.findById(decoded.id);
 
     req.user = user;
     next();

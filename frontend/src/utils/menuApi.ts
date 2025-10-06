@@ -2,7 +2,7 @@ import axios from "axios";
 export const fetchMenus = async (restaurantId: any) => {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/menu/get_menus/${restaurantId}`,
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/menu/get_menus/${restaurantId}`,
       {
         withCredentials: true,
       }
@@ -17,7 +17,7 @@ export const fetchMenus = async (restaurantId: any) => {
 export const updateMenu = async (form: any, menuId: string | undefined) => {
   try {
     const response = await axios.put(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/menu/edit_menu/${menuId}`,
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/menu/edit_menu/${menuId}`,
       form,
       {
         withCredentials: true,
@@ -40,7 +40,7 @@ export const createMenu = async (
   try {
     console.log(form);
     const data = await axios.post(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/menu/add_menu/${restaurantId}`,
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/menu/add_menu/${restaurantId}`,
       form,
       {
         withCredentials: true,
@@ -63,7 +63,7 @@ export const deleteMenu = async (
 ): Promise<{ data: any } | undefined> => {
   try {
     const data = await axios.delete(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/menu/delete_menu/${restaurantId}/${menuId}`,
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/menu/delete_menu/${restaurantId}/${menuId}`,
       {
         withCredentials: true,
       }

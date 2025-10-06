@@ -6,7 +6,7 @@ import { useState, FormEvent } from "react";
 
 const Signup = (): React.JSX.Element => {
   const Router = useRouter();
-  const url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/signup`;
+  const url = `${process.env.NEXT_PUBLIC_SERVER_URL}/user/signup`;
   const signupData = {
     username: "",
     fullname: "",

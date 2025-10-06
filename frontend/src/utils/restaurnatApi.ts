@@ -7,7 +7,7 @@ export const updateRestaurant = async (
 ): Promise<{ data: any } | undefined> => {
   try {
     const data = await axios.put(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/restaurant/update_restaurant/${restaurantId}`,
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/restaurant/update_restaurant/${restaurantId}`,
       form,
       {
         withCredentials: true,
@@ -28,7 +28,7 @@ export const createRestaurant = async (
 ): Promise<{ data: any } | undefined> => {
   try {
     const data = await axios.post(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/restaurant/create_restaurant`,
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/restaurant/create_restaurant`,
       form,
       {
         withCredentials: true,
@@ -47,7 +47,7 @@ export const createRestaurant = async (
 export const getAllRestaurants = async () => {
   try {
     const data = await axios.get(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/restaurant/get_all_restaurants`
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/restaurant/get_all_restaurants`
     );
     const restaurants = data.data.restuarants;
     return { restaurants };
@@ -63,7 +63,7 @@ export const searchRestaurant = async (searchState: searchState) => {
     params.set("search_text", searchState.searchText);
     params.set("selected_cuisines", searchState.selectedCuisines.join(","));
 
-    const fetchUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/restaurant/search_restaurants?${params}`;
+    const fetchUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/restaurant/search_restaurants?${params}`;
 
     const data = await axios.get(fetchUrl);
 
@@ -78,7 +78,7 @@ export const searchRestaurant = async (searchState: searchState) => {
 export const getSingleRestaurant = async (restuarantId: string) => {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/restaurant/view_restaurant/${restuarantId}`
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/restaurant/view_restaurant/${restuarantId}`
     );
     return { restaurantData: response.data.restaurant };
   } catch (error) {

@@ -28,15 +28,15 @@ export const userSlice = createSlice({
     rmUser: (state) => {
       state.user = null;
     },
-    loadingDone:(state) => {
+    loadingDone: (state) => {
       state.isLoading = false
     },
-    lodingStart: (state) => {
+    loadingStart: (state) => {
       state.isLoading = true
     }
   },
 });
 
-export const { login, logout, rmUser, setUser, loadingDone, lodingStart } = userSlice.actions;
+export const { login, logout, rmUser, setUser, loadingDone, loadingStart } = userSlice.actions;
 
 export default userSlice.reducer;

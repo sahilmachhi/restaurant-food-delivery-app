@@ -35,7 +35,7 @@ const Cart = () => {
 
   const fetchAddress = async () => {
     await axios
-      .get(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/getAddress`, {
+      .get(`${process.env.NEXT_PUBLIC_SERVER_URL}/user/getAddress`, {
         headers: {
           "Content-Type": "application/json",
         },

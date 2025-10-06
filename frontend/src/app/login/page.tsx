@@ -2,12 +2,10 @@
 
 import Link from "next/link";
 import { useState, FormEvent } from "react";
-import { PostRequest } from "@/utils/tanstackApiHandler";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { login, setUser } from "@/store/userSlice";
 import { loginAPI } from "@/utils/userAuthApi";
-// import { isPending } from "@reduxjs/toolkit";
 
 const Login = (): React.JSX.Element => {
   const dispatch = useDispatch();
@@ -26,7 +24,7 @@ const Login = (): React.JSX.Element => {
     setForm({ ...form, [name]: value });
   }
 
-  const url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/login`;
+  // const url = `${process.env.NEXT_PUBLIC_SERVER_URL}/user/login`;
   // const { mutateAsync, isPending, data } = PostRequest(url, ["user"]);
 
   // const userData = data?.data.data;

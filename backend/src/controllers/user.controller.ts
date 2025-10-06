@@ -1,9 +1,7 @@
 import { Request, Response } from "express";
-import { User } from "../models/user.model";
+import { IUser, User } from "../models/user.model";
 import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
-import { Document } from "mongoose";
-import { CookiesOptions } from "../utils/utils";
 
 export interface userRequest extends Request {
   user?: any;
@@ -34,7 +32,7 @@ const generateAccessRefreshToken = (
     },
     secret,
     {
-      expiresIn: process.env.REFRESH_TOKEN_EXPIERY,
+      expiresIn: process.env.ACCESS_TOKEN_EXPIERY,
     }
   );
 
@@ -83,78 +81,68 @@ export const createUser = async (req: Request, res: Response) => {
   }
 };
 
-export const loginUser = async (req: Request, res: Response) => {
+export const loginUser = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { username, email, password } = req.body;
 
-    if (!(username || email)) {
-      return res.status(401).json({
+    if (!password || (!username && !email)) {
+      return res.status(400).json({
         success: false,
-        message: `username is already exist`,
+        message: "Username or email and password are required.",
       });
     }
-
-    interface userObj extends Document {
-      password: string;
-      _id: string;
-      email: string;
-      username: string;
-      refreshToken: string;
-    }
-
-    const user: userObj | null = await User.findOne({
+    // Find user by username or email
+    const user: IUser | null = await User.findOne<IUser>({
       $or: [{ username }, { email }],
     });
 
+
     if (!user) {
-      return res.status(402).json({
+      return res.status(404).json({
         success: false,
-        message: `user has not created account`,
+        message: "User not found. Please sign up first.",
       });
     }
 
-    const match = await bcrypt.compare(password, user.password);
-    if (!match) {
-      return res.status(400).json({
+    // Compare passwords
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({
         success: false,
-        message: `invalid password`,
+        message: "Invalid password.",
       });
     }
 
+    // Generate tokens
     const { accessToken, refreshToken } = generateAccessRefreshToken(
-      user._id,
+      user._id as string,
       user.email,
       user.username
     );
 
+    // Save refresh token
     user.refreshToken = refreshToken;
-
     await user.save();
 
-    console.log(accessToken);
-    console.log(refreshToken);
-    return (
-      res
-        .setHeader(
-          "Set-Cookie",
-          `accessToken=${accessToken}; Path=/; SameSite=None; Secure;Max-Age=${
-            3 * 24 * 60 * 60
-          };HttpOnly;`
-        )
-        // .cookie("accessToken", accessToken, CookiesOptions)
-        // .cookie("refreshToken", refreshToken, CookiesOptions)
-        .status(200)
-        .json({
-          success: true,
-          message: `user logged in successfully`,
-          data: user,
-          accessToken: accessToken,
-        })
-    );
+    // Respond with tokens instead of cookies
+    return res.status(200).json({
+      success: true,
+      message: "User logged in successfully.",
+      data: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+      },
+      tokens: {
+        accessToken,
+        refreshToken,
+      },
+    });
   } catch (error) {
+    console.error("Login error:", error);
     return res.status(500).json({
       success: false,
-      message: `server error`,
+      message: "Internal server error.",
     });
   }
 };
@@ -162,35 +150,26 @@ export const loginUser = async (req: Request, res: Response) => {
 export const logoutUser = async (req: userRequest, res: Response) => {
   try {
     const user = req.user;
-
-    const refreshToken: string = "";
-    user.refreshToken = refreshToken;
-
-    console.log("updated user" + user);
-    try {
-      await user.save();
-    } catch (error) {
-      return res.status(405).json({
-        message: error,
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized: user not found in request",
       });
     }
 
-    const options = {
-      httpOnly: true,
-      secure: false,
-    };
-    res
-      .clearCookie("accessToken", options)
-      .clearCookie("refreshToken", options)
-      .status(200)
-      .json({
-        success: true,
-        message: "user logged out successfully",
-      });
+    // Invalidate refresh token
+    user.refreshToken = "";
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "User logged out successfully",
+    });
   } catch (error) {
+    console.error("Logout error:", error);
     return res.status(500).json({
       success: false,
-      message: `server error`,
+      message: "Internal server error",
     });
   }
 };
@@ -210,6 +189,7 @@ export const getUser = async (req: userRequest, res: Response) => {
       success: true,
       data: user,
     });
+    
   } catch (error) {
     return res.status(500).json({
       success: false,

@@ -1,42 +1,77 @@
 import Link from "next/link";
+import { motion } from "framer-motion";
+import { Info, Shield, FileText, Mail } from "lucide-react";
+
+const linkVariants = {
+  hover: {
+    scale: 1.05,
+    color: "hsl(var(--primary))",
+    transition: { duration: 0.2, ease: [0.22, 1, 0.36, 1] as any },
+  },
+};
 
 const Footer = () => {
   return (
-    <>
-      <footer className="bg-white rounded-lg shadow m-4 dark:bg-gray-800">
-        <div className="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
-          <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
+    <footer className="bg-background border-t border-border/20">
+      <div className="container mx-auto px-4 lg:px-36 md:px-16 py-12">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="flex flex-col md:flex-row items-center justify-between gap-8 text-sm"
+        >
+          <motion.span
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            className="text-muted-foreground"
+          >
             © 2024{" "}
-            <Link href="https://flowbite.com/" className="hover:underline">
+            <Link
+              href="https://flowbite.com/"
+              className="font-semibold text-foreground hover:text-primary transition-colors duration-200"
+            >
               BestFood.com™
             </Link>
             . All Rights Reserved.
-          </span>
-          <ul className="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
-            <li>
-              <Link href="#" className="hover:underline me-4 md:me-6">
+          </motion.span>
+          <motion.ul
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            className="flex flex-wrap items-center justify-center gap-6 text-sm font-medium text-muted-foreground"
+          >
+            <motion.li variants={linkVariants} whileHover="hover">
+              <Link href="#" className="flex items-center gap-1 hover:text-primary transition-colors duration-200">
+                <Info className="w-3 h-3" />
                 About
               </Link>
-            </li>
-            <li>
-              <Link href="#" className="hover:underline me-4 md:me-6">
+            </motion.li>
+            <motion.li variants={linkVariants} whileHover="hover">
+              <Link href="#" className="flex items-center gap-1 hover:text-primary transition-colors duration-200">
+                <Shield className="w-3 h-3" />
                 Privacy Policy
               </Link>
-            </li>
-            <li>
-              <Link href="#" className="hover:underline me-4 md:me-6">
+            </motion.li>
+            <motion.li variants={linkVariants} whileHover="hover">
+              <Link href="#" className="flex items-center gap-1 hover:text-primary transition-colors duration-200">
+                <FileText className="w-3 h-3" />
                 Licensing
               </Link>
-            </li>
-            <li>
-              <Link href="#" className="hover:underline">
+            </motion.li>
+            <motion.li variants={linkVariants} whileHover="hover">
+              <Link href="#" className="flex items-center gap-1 hover:text-primary transition-colors duration-200">
+                <Mail className="w-3 h-3" />
                 Contact
               </Link>
-            </li>
-          </ul>
-        </div>
-      </footer>
-    </>
+            </motion.li>
+          </motion.ul>
+        </motion.div>
+      </div>
+    </footer>
   );
 };
 

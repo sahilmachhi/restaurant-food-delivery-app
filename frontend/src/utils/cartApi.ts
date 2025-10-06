@@ -3,7 +3,7 @@ import axios from "axios";
 export const getCarts = async () => {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/cart/view_cart`,
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/cart/view_cart`,
       { withCredentials: true }
     );
     return { cartData: response.data.cart.items };
@@ -15,7 +15,7 @@ export const getCarts = async () => {
 export const addToCart = async (itemId: string) => {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/cart/add_cart/${itemId}`,
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/cart/add_cart/${itemId}`,
       { withCredentials: true }
     );
     return { cartData: response };
@@ -27,7 +27,7 @@ export const addToCart = async (itemId: string) => {
 export const incrementQty = async (itemId: string) => {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/cart/add_qty/${itemId}`,
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/cart/add_qty/${itemId}`,
       { withCredentials: true }
     );
     return { cartData: response };
@@ -39,7 +39,7 @@ export const incrementQty = async (itemId: string) => {
 export const decreaseQty = async (itemId: string) => {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/cart/remove_qty/${itemId}`,
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/cart/remove_qty/${itemId}`,
       { withCredentials: true }
     );
     return { cartData: response };
@@ -51,7 +51,7 @@ export const decreaseQty = async (itemId: string) => {
 export const removeItem = async (itemId: string) => {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/cart/remove_cart/${itemId}`,
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/cart/remove_cart/${itemId}`,
       { withCredentials: true }
     );
     return { cartData: response };
@@ -63,7 +63,7 @@ export const removeItem = async (itemId: string) => {
 export const clearCart = async () => {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/cart/clear_cart`,
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/cart/clear_cart`,
       { withCredentials: true }
     );
     return { cartData: response };

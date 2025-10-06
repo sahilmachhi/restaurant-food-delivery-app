@@ -16,7 +16,7 @@ const EditRestaurant = (props: urlProp) => {
   const fetchRestaurant = async () => {
     await axios
       .get(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/restaurant/view_restaurant/${restaurantId}`
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/restaurant/view_restaurant/${restaurantId}`
       )
       .then((res) => {
         const restaurant = res.data.restaurant;

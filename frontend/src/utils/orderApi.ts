@@ -3,7 +3,7 @@ import axios from "axios";
 export const requestOrder = async (orderDetails: any) => {
   try {
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/order/createOrder`,
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/order/createOrder`,
       orderDetails,
       {
         withCredentials: true,
@@ -19,7 +19,7 @@ export const requestOrder = async (orderDetails: any) => {
 export const getOrderFromUser = async () => {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/order/get_user_order`,
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/order/get_user_order`,
       {
         withCredentials: true,
       }
@@ -38,7 +38,7 @@ export const getOrderFromUser = async () => {
 export const getOrderFromRestaurant = async (restaurantId: string) => {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/order/get_restaurant_order/${restaurantId}`,
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/order/get_restaurant_order/${restaurantId}`,
       {
         withCredentials: true,
       }
@@ -56,7 +56,7 @@ export const updateOrderStatus = async (
 ) => {
   try {
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/order/update_oder_status/${orderId}`,
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/order/update_oder_status/${orderId}`,
       {
         status: orderStatus,
       },
