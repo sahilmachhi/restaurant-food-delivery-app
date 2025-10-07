@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { getAllRestaurants, searchRestaurant } from "@/utils/restaurnatApi";
 import { useEffect, useState } from "react";

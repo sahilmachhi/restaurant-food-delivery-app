@@ -1,5 +1,41 @@
 import Link from "next/link";
 import { Button } from "./ui/button";
+import { motion } from "framer-motion";
+import { Edit2, Trash2, Crown, MapPin } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+
+const cardVariants = {
+  hover: {
+    scale: 1.02,
+    boxShadow: "0 10px 30px rgba(0, 0, 0, 0.1)",
+    transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] as any },
+  },
+};
+
+const buttonVariants = {
+  hover: {
+    scale: 1.05,
+    transition: { duration: 0.2, ease: [0.22, 1, 0.36, 1] as any },
+  },
+};
+
+const deleteVariants = {
+  hover: {
+    scale: 1.05,
+    backgroundColor: "hsl(var(--destructive) / 0.9)",
+    boxShadow: "0 8px 25px rgba(239, 68, 68, 0.3)",
+    transition: { duration: 0.2, ease: [0.22, 1, 0.36, 1] as any },
+  },
+};
+
+const defaultVariants = {
+  hover: {
+    scale: 1.05,
+    backgroundColor: "hsl(var(--primary) / 0.9)",
+    boxShadow: "0 8px 25px rgba(59, 130, 246, 0.3)",
+    transition: { duration: 0.2, ease: [0.22, 1, 0.36, 1] as any },
+  },
+};
 
 const AddressCard = ({
   address,
@@ -15,10 +51,15 @@ const AddressCard = ({
   const orderSignal = (address: any) => {
     orderNow(address);
   };
+
   return (
-    <>
-      <div className="w-full flex flex-col gap-10 rounded-xl bg-white shadow-lg ring-1 ring-black/5 p-10">
-        <div>
+    <motion.div
+      variants={cardVariants}
+      whileHover="hover"
+      className="w-full"
+    >
+      <Card className="overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-background to-muted/50">
+        <CardContent className="p-6 space-y-4">
           <div
             onClick={() => {
               if (!deleteAddress) {
@@ -26,49 +67,64 @@ const AddressCard = ({
                 setOpen(false);
               }
             }}
-            className="cursor-pointer"
+            className="cursor-pointer space-y-2"
           >
-            <h1>{address.name}</h1>
-            <h2>{address.address.name}</h2>
-            <div className="flex-col flex gap-2">
-              <p>
-                {address.address.addressLine1},{address.address.addressLine2}
+            <div className="flex items-center gap-2">
+              <MapPin className="w-4 h-4 text-primary" />
+              <h1 className="text-lg font-semibold text-foreground">{address.name}</h1>
+            </div>
+            <h2 className="text-sm font-medium text-muted-foreground">{address.address.name}</h2>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p className="flex items-center gap-1">
+                {address.address.addressLine1}
+                {address.address.addressLine2 && `, ${address.address.addressLine2}`}
               </p>
-              <p>
-                {address.address.city} - {address.address.pincode},
-              </p>
-              <p>
-                {address.address.district}, {address.address.state},{" "}
-                {address.address.country}
-              </p>
-              <h1>{address._id}</h1>
+              <p>{`${address.address.city} - ${address.address.pincode}`}</p>
+              <p>{`${address.address.district}, ${address.address.state}, ${address.address.country}`}</p>
             </div>
           </div>
           {deleteAddress ? (
-            <div className="flex gap-2 w-full md:flex-row flex-col justify-center items-center mt-5">
-              <Link
-                href={`/address/${address._id}`}
-                prefetch={false}
-                className="w-full"
-              >
-                <Button className="w-full bg-yellow-300 text-black hover:bg-yellow-700 hover:text-white">
-                  edit
+            <div className="flex flex-col w-full gap-2 pt-4 border-t border-border/20">
+              <motion.div whileHover="hover" whileTap="tap">
+                <Button
+                  asChild
+                  variant="outline"
+                  size="sm"
+                  className="border-primary/30 text-primary hover:bg-primary/5"
+                >
+                  <Link href={`/address/${address._id}`} prefetch={false} className="flex items-center gap-2 w-full justify-center">
+                    <Edit2 className="w-3 h-3" />
+                    Edit
+                  </Link>
                 </Button>
-              </Link>
-              <Button
-                className="w-full bg-red-400 hover:bg-red-700"
-                onClick={() => deleteAddress(address._id)}
-              >
-                delete
-              </Button>
-              <Button className="w-full bg-green-400 hover:bg-green-700">
-                set as Default
-              </Button>
+              </motion.div>
+              <motion.div whileHover="default" whileTap="tap">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1 h-10 bg-primary/10 border-primary/30 text-primary hover:bg-primary/20 w-full"
+
+                >
+                  <Crown className="w-3 h-3 mr-1" />
+                  Set as Default
+                </Button>
+              </motion.div>
+              <motion.div whileHover="hover" whileTap="tap">
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  className="flex-1 h-10 bg-destructive/10 hover:bg-destructive/20 border-destructive/30 text-destructive w-full"
+                  onClick={() => deleteAddress(address._id)}
+                >
+                  <Trash2 className="w-3 h-3 mr-1" />
+                  Delete
+                </Button>
+              </motion.div>
             </div>
           ) : null}
-        </div>
-      </div>
-    </>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 };
 

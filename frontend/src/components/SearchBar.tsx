@@ -56,7 +56,7 @@ const SearchBar = ({ onSubmit, onReset, placeHolder, searchQuery }: Props) => {
   };
 
   return (
-    <Card className="overflow-hidden shadow-sm border-border/20">
+    <Card className="overflow-hidden shadow-sm border-border/20 backdrop-blur-sm bg-background/80">
       <CardContent className="p-0">
         <Form {...form}>
           <form
@@ -64,45 +64,43 @@ const SearchBar = ({ onSubmit, onReset, placeHolder, searchQuery }: Props) => {
               e.preventDefault();
               startTransition(() => form.handleSubmit(onSubmit)(e));
             }}
-            className={`flex items-center gap-3 p-4 ${
+            className={`flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 p-3 sm:p-4 ${
               form.formState.errors.searchQuery ? "ring-2 ring-destructive/20" : ""
             }`}
           >
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              className="text-primary"
-            >
-              <Search size={20} className="hidden md:block" />
-            </motion.div>
-            <FormField
-              control={form.control}
-              name="searchQuery"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormControl>
-                    <Input
-                      {...field}
-                      className="border-none bg-transparent text-lg focus-visible:ring-0 placeholder:text-muted-foreground transition-colors duration-200"
-                      placeholder={placeHolder}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <motion.div
-              initial={{ opacity: 0, x: 10 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="flex gap-2"
-            >
+            <div className="flex items-center gap-3 flex-1">
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                className="text-primary flex-shrink-0"
+              >
+                <Search size={20} className="hidden sm:block" />
+              </motion.div>
+              <FormField
+                control={form.control}
+                name="searchQuery"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormControl>
+                      <Input
+                        {...field}
+                        className="border-none bg-transparent text-base sm:text-lg focus-visible:ring-0 placeholder:text-muted-foreground transition-all duration-200 pr-0"
+                        placeholder={placeHolder}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="flex gap-2 sm:gap-2 flex-shrink-0">
               <motion.div whileHover="hover">
                 <Button
                   onClick={handleReset}
                   type="button"
                   variant="outline"
                   size="sm"
-                  className="h-10 px-4 rounded-full border-border hover:border-border/50"
+                  className="h-10 px-3 sm:px-4 rounded-full border-border hover:border-border/50 flex-shrink-0 min-w-[80px] sm:min-w-[100px]"
                   disabled={isPending}
                 >
                   Reset
@@ -112,20 +110,25 @@ const SearchBar = ({ onSubmit, onReset, placeHolder, searchQuery }: Props) => {
                 <Button
                   type="submit"
                   size="sm"
-                  className="h-10 px-6 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground disabled:opacity-50 shadow-sm"
+                  className="h-10 px-4 sm:px-6 rounded-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-primary-foreground disabled:opacity-50 shadow-md hover:shadow-lg flex-shrink-0 min-w-[80px] sm:min-w-[100px] transition-all duration-300"
                   disabled={isPending}
                 >
                   {isPending ? (
                     <>
                       <Search className="w-4 h-4 animate-spin mr-2" />
-                      Searching...
+                      <span className="hidden sm:inline">Searching...</span>
+                      <span className="sm:hidden">Go</span>
                     </>
                   ) : (
-                    "Search"
+                    <>
+                      <Search className="w-4 h-4 mr-2 hidden sm:block" />
+                      <span className="sm:hidden">Go</span>
+                      <span className="hidden sm:inline">Search</span>
+                    </>
                   )}
                 </Button>
               </motion.div>
-            </motion.div>
+            </div>
           </form>
         </Form>
       </CardContent>

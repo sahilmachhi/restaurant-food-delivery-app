@@ -31,16 +31,16 @@ const RestaurantCard = ({ restaurant }: { restaurant: any }) => {
           {restaurant.restaurantName}
         </h5>
         <div className="flex justify-center items-center gap-3">
-          <Link href={`/manageRestaurant/${restaurant._id}`} prefetch={false}>
+          <Link href={`/manage_restaurant/${restaurant._id}`} prefetch={true}>
             <Button className="bg-green-400 hover:bg-green-700">
               Manage Orders
             </Button>
           </Link>
 
-          <Link href={`/myRestaurant/${restaurant._id}`} prefetch={false}>
+          <Link href={`/my_restaurant/${restaurant._id}`} prefetch={true}>
             <Button>Edit</Button>
           </Link>
-          <Link href={`/menus/${restaurant._id}`} prefetch={false}>
+          <Link href={`/menus/${restaurant._id}`} prefetch={true}>
             <Button>Edit Menus</Button>
           </Link>
           <Button

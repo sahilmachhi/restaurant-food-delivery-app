@@ -16,7 +16,7 @@ const containerVariants = {
     opacity: 1,
     transition: {
       duration: 0.6,
-      ease: [0.22, 1, 0.36, 1],
+      ease: [0.22, 1, 0.36, 1] as any,
     },
   },
 };
@@ -26,7 +26,7 @@ const itemVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] as any },
   },
 };
 
@@ -35,12 +35,13 @@ const CreateAddress = () => {
   const [address, setAddress] = useState<Address | any>({});
 
   const updateAddressData = async (address: any) => {
+    const token = localStorage.getItem('accessToken');
     await axios
       .post("http://localhost:5000/api/user/createAddress", address, {
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
         },
-        withCredentials: true,
       })
       .then((data) => {
         if (data.data.success) {
