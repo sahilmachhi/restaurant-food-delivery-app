@@ -7,6 +7,9 @@ export const requestOrder = async (orderDetails: any) => {
       orderDetails,
       {
         withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        }
       }
     );
     return { order: response };
@@ -19,10 +22,11 @@ export const requestOrder = async (orderDetails: any) => {
 export const getOrderFromUser = async () => {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/order/get_user_order`,
-      {
-        withCredentials: true,
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/order/get_user_order`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       }
+    }
     );
     return {
       items: response.data.orders,
@@ -41,6 +45,9 @@ export const getOrderFromRestaurant = async (restaurantId: string) => {
       `${process.env.NEXT_PUBLIC_SERVER_URL}/order/get_restaurant_order/${restaurantId}`,
       {
         withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        }
       }
     );
     return { order: response.data.orders };
@@ -62,6 +69,9 @@ export const updateOrderStatus = async (
       },
       {
         withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        }
       }
     );
     return { status: response.data };
